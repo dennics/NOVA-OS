@@ -1,0 +1,24 @@
+#!/usr/bin/bash
+set -euo pipefail
+
+# Anaconda invokes `bootc install to-filesystem` after it mounts the selected
+# destination. The container import needs more scratch space than the Live
+# session's RAM-backed overlay, so keep its temporary files on that destination.
+if [[ $# -ge 3 && $1 == install && $2 == to-filesystem ]]; then
+    target=${!#}
+    [[ $target == /mnt/sysimage ]] || { echo 'Unexpected NOVA install target.' >&2; exit 64; }
+    resolved=$(readlink -f -- "$target")
+    [[ $resolved == /var/mnt/sysimage ]] || { echo 'NOVA install target is not mounted as expected.' >&2; exit 64; }
+    source=$(findmnt -n -o SOURCE --target "$resolved")
+    [[ $source == /dev/* ]] || { echo 'NOVA install target must be a selected disk filesystem.' >&2; exit 64; }
+    install -d -m 1777 "$resolved/var/tmp"
+    scratch=$(mktemp -d "$resolved/var/tmp/nova-bootc.XXXXXXXX")
+    [[ $scratch == "$resolved"/var/tmp/nova-bootc.* && -d $scratch ]] || exit 64
+    cleanup() { rm -rf -- "$scratch"; }
+    trap cleanup EXIT
+    export TMPDIR=$scratch
+    /usr/libexec/nova-bootc-real "$@"
+    exit $?
+fi
+
+exec /usr/libexec/nova-bootc-real "$@"

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Welcome to NOVA
+Name[ro]=Bun venit în NOVA
+Exec=nova-control-center --welcome
+Icon=nova-control-center
+OnlyShowIn=KDE;
+X-KDE-autostart-phase=2
+Terminal=false
+

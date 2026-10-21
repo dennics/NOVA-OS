@@ -1,0 +1,14 @@
+NOVA original-source license: OWNER APPROVAL PENDING
+
+This file records a release-preparation decision, not an open-source license.
+No new license grant is made by this draft. Do not publish this preparation
+branch as a licensed open-source release until the owner approves a license.
+
+MIT is proposed for the original NOVA code, documentation and graphics.
+The proposed text is in LICENSES/MIT-proposed.txt; scope and alternatives are
+explained in docs/LICENSING.md. Existing local MIT labels are draft metadata
+and have not been treated as owner approval.
+
+Third-party material retains its own terms. The RAR fixture is CC0-1.0;
+see tests/fixtures/rar/README.md and LICENSES/CC0-1.0.txt. Fedora, Linux, Qt,
+KDE, bootc and other dependencies are not relicensed by NOVA.

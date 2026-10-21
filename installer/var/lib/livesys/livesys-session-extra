@@ -1,0 +1,9 @@
+#!/usr/bin/sh
+# Sourced by livesys-main after Fedora's KDE session setup and before its
+# final liveuser ownership and SELinux relabeling. NOVA provides the Live welcome.
+# LiveEnvironment=true bypasses Plasma Welcome's LastSeenVersion preference;
+# clear only that flag so the runtime defaults suppress its automatic launcher.
+if [ -f /home/liveuser/.config/plasma-welcomerc ]; then
+    kwriteconfig6 --file /home/liveuser/.config/plasma-welcomerc \
+        --group General --key LiveEnvironment false
+fi

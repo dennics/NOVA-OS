@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=NOVA Smart Compatibility
+Name[ro]=NOVA Smart Compatibility
+Comment=Check a Windows program before choosing whether to run it with Wine
+Comment[ro]=Verifică un program Windows înainte de a decide dacă îl rulezi cu Wine
+Exec=nova-run-exe %f
+TryExec=nova-compatibility
+MimeType=application/x-ms-dos-executable;application/x-msdownload;application/vnd.microsoft.portable-executable;
+NoDisplay=true
+Terminal=false
+Categories=Utility;

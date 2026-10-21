@@ -1,0 +1,18 @@
+[Default Applications]
+x-scheme-handler/http=opera-gx.desktop
+x-scheme-handler/https=opera-gx.desktop
+x-scheme-handler/ftp=opera-gx.desktop
+text/html=opera-gx.desktop
+application/xhtml+xml=opera-gx.desktop
+application/x-ms-dos-executable=nova-wine.desktop
+application/x-msdownload=nova-wine.desktop
+application/vnd.microsoft.portable-executable=nova-wine.desktop
+application/vnd.rar=org.kde.ark.desktop
+application/x-rar=org.kde.ark.desktop
+application/zip=org.kde.ark.desktop
+application/x-7z-compressed=org.kde.ark.desktop
+
+[Added Associations]
+application/x-ms-dos-executable=nova-wine.desktop
+application/x-msdownload=nova-wine.desktop
+application/vnd.microsoft.portable-executable=nova-wine.desktop

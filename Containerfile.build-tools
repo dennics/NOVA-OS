@@ -1,0 +1,19 @@
+ARG IMAGE_BUILDER_IMAGE
+FROM ${IMAGE_BUILDER_IMAGE}
+USER 0
+RUN --mount=type=cache,target=/var/cache/libdnf5 \
+    dnf -y --setopt=install_weak_deps=False --setopt=keepcache=True install \
+        squashfs-tools xorriso isomd5sum grub2-tools grub2-tools-minimal grub2-pc-modules \
+        dosfstools mtools python-unversioned-command selinux-policy-targeted \
+        shim-x64 grub2-efi-x64-cdboot && \
+    for program in podman mksquashfs xorriso implantisomd5 grub2-mkimage python setfiles mkfs.vfat mcopy; do \
+        command -v "$program" || exit 1; \
+    done && \
+    test -s /etc/selinux/targeted/contexts/files/file_contexts && \
+    test -x /usr/bin/ostree && test -x /usr/bin/mount && test -x /usr/bin/umount && \
+    for file in /boot/efi/EFI/fedora/shimx64.efi /boot/efi/EFI/fedora/mmx64.efi \
+        /boot/efi/EFI/fedora/gcdx64.efi /usr/share/grub/unicode.pf2; do \
+        test -s "$file" || exit 1; \
+    done
+LABEL org.opencontainers.image.title="NOVA ISO build tools" \
+      org.opencontainers.image.description="Build environment only; never the installed operating system"

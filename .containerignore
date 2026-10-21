@@ -1,0 +1,9 @@
+.git
+artifacts
+build/*
+!build/install
+!build/install/**
+__pycache__
+tools
+docs
+

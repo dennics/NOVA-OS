@@ -1,0 +1,12 @@
+label: NOVA_0_2
+grub2:
+  default: 0
+  timeout: 5
+  entries:
+    - name: Try NOVA OS 0.2 Preview
+      linux: /images/pxeboot/vmlinuz root=live:CDLABEL=NOVA_0_2 rd.live.image rd.live.overlay.overlayfs=1 enforcing=1 rhgb quiet console=tty0
+      initrd: /images/pxeboot/initrd.img
+    - name: Try NOVA OS - reduced effects
+      linux: /images/pxeboot/vmlinuz root=live:CDLABEL=NOVA_0_2 rd.live.image rd.live.overlay.overlayfs=1 enforcing=1 nova.minimal=1 rhgb quiet console=tty0
+      initrd: /images/pxeboot/initrd.img
+

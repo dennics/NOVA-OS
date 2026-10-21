@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=NOVA Control Center
+Name[ro]=Centrul de control NOVA
+Comment=Your desktop, preferences and system information
+Comment[ro]=Desktopul, preferințele și informațiile sistemului
+Exec=nova-control-center
+Icon=nova-control-center
+Terminal=false
+Categories=Settings;DesktopSettings;System;Qt;KDE;
+StartupNotify=true
+SingleMainWindow=true
+

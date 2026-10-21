@@ -1,0 +1,24 @@
+#!/usr/bin/bash
+set -euo pipefail
+
+[[ $EUID -eq 0 && $# -eq 1 ]] || { echo 'Run through NOVA authorization with one operation.' >&2; exit 2; }
+case "$1" in check|download|stage|rollback) ;; *) echo 'Unsupported update operation.' >&2; exit 2 ;; esac
+
+status=$(bootc status --format=json --format-version=1)
+jq -e '.status.booted != null and (.status.readOnly | not)' <<<"$status" >/dev/null \
+    || { echo 'Updates require an installed, writable NOVA system.' >&2; exit 3; }
+
+if [[ $1 == rollback ]]; then
+    jq -e '.status.rollback != null' <<<"$status" >/dev/null \
+        || { echo 'No previous deployment is available.' >&2; exit 3; }
+    exec bootc rollback
+fi
+
+jq -e '.spec.image.transport == "registry" and (.spec.image.image | type == "string" and length > 0 and (startswith("localhost/") | not) and (startswith("nova.invalid/") | not))' <<<"$status" >/dev/null \
+    || { echo 'No remote NOVA update source is configured.' >&2; exit 3; }
+
+case "$1" in
+    check) exec bootc upgrade --check ;;
+    download) exec bootc upgrade --download-only ;;
+    stage) exec bootc upgrade --from-downloaded ;;
+esac

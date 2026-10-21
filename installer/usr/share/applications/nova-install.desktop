@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Install NOVA OS
+Name[ro]=Instalează NOVA OS
+Comment=Install this preview to a selected disk
+Comment[ro]=Instalează această versiune preview pe un disc selectat
+Exec=nova-install
+Icon=system-software-install
+Terminal=false
+Categories=System;
+

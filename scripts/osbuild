@@ -1,0 +1,155 @@
+#!/usr/bin/python3
+"""Fix the generic ISO build root and add the official Live SELinux stage.
+
+Only used inside the build container. Never installed in NOVA or on the host.
+The upstream manifest is retained by Image Builder; this saves the effective one.
+"""
+from copy import deepcopy
+import json
+import os
+from pathlib import Path
+import re
+import sys
+
+STORAGE = "org.osbuild.containers-storage"
+DIGEST = re.compile(r"sha256:[0-9a-f]{64}\Z")
+LIVE_REF = re.compile(r"localhost/nova-live:[a-zA-Z0-9][a-zA-Z0-9._-]*\Z")
+
+
+def require(condition, description):
+    if not condition:
+        raise SystemExit("Generic ISO contract changed: " + description)
+
+
+def pipeline(manifest, name):
+    matches = [item for item in manifest["pipelines"] if item.get("name") == name]
+    require(len(matches) == 1, "expected one " + name + " pipeline")
+    return matches[0]
+
+
+def deployment_reference(target):
+    stages = target.get("stages")
+    require(isinstance(stages, list) and all(isinstance(stage, dict) for stage in stages),
+            "expected a list of stage objects")
+    deployments = [stage for stage in stages if stage.get("type") == "org.osbuild.container-deploy"]
+    require(len(deployments) == 1 and stages[0] is deployments[0],
+            "expected exactly one initial container deploy stage")
+    deploy = deployments[0]
+    inputs = deploy.get("inputs")
+    require(isinstance(inputs, dict) and set(inputs) == {"images"},
+            "unexpected container deploy inputs")
+    images = inputs["images"]
+    require(isinstance(images, dict) and set(images) == {"type", "origin", "references"},
+            "unexpected image input schema")
+    require(images["type"] == STORAGE and images["origin"] == "org.osbuild.source",
+            "expected a local container storage source")
+    references = images["references"]
+    require(isinstance(references, dict) and len(references) == 1,
+            "expected one image reference")
+    image_id, metadata = next(iter(references.items()))
+    require(isinstance(image_id, str) and DIGEST.fullmatch(image_id) is not None,
+            "invalid image ID")
+    require(isinstance(metadata, dict) and set(metadata) == {"name"}
+            and isinstance(metadata["name"], str) and metadata["name"],
+            "unexpected image reference metadata")
+    return images, image_id, metadata["name"]
+
+
+def transform_build_environment(manifest, tools_ref, tools_id, live_ref):
+    """Change only build's deploy reference and register its local image source."""
+    require(tools_ref == "localhost/nova-iso-tools:0.1", "unexpected tools image reference")
+    require(isinstance(tools_id, str) and DIGEST.fullmatch(tools_id) is not None,
+            "expected the full sha256 tools image ID, not a tag or manifest digest")
+    require(isinstance(live_ref, str) and LIVE_REF.fullmatch(live_ref) is not None,
+            "unexpected Live image reference")
+    require(isinstance(manifest, dict) and manifest.get("version") == "2",
+            "expected manifest version 2")
+    pipelines = manifest.get("pipelines")
+    require(isinstance(pipelines, list) and pipelines
+            and all(isinstance(item, dict) for item in pipelines),
+            "expected a nonempty list of pipeline objects")
+    names = [item.get("name") for item in pipelines]
+    require(all(isinstance(name, str) and name for name in names)
+            and len(names) == len(set(names)), "expected unique pipeline names")
+    build = pipeline(manifest, "build")
+    live = pipeline(manifest, "os-tree")
+    require(build.get("runner") == "org.osbuild.fedora44" and "build" not in build,
+            "expected a top-level Fedora 44 build pipeline")
+    require(live.get("build") == "name:build", "unexpected os-tree build dependency")
+    build_images, build_id, build_ref = deployment_reference(build)
+    _, live_id, actual_live_ref = deployment_reference(live)
+    require([stage.get("type") for stage in build["stages"]]
+            == ["org.osbuild.container-deploy", "org.osbuild.selinux"],
+            "unexpected build stage sequence")
+    require(actual_live_ref == live_ref, "Live image does not match the requested source")
+    require(tools_id != live_id, "tools and Live must be distinct images")
+    # Accept upstream's current bug and a future upstream fix, plus repeat invocation.
+    require((build_id, build_ref) in {(live_id, live_ref), (tools_id, tools_ref)},
+            "build source is neither the expected Live image nor tools image")
+    sources = manifest.get("sources")
+    require(isinstance(sources, dict) and STORAGE in sources,
+            "missing local container storage source")
+    storage = sources[STORAGE]
+    require(isinstance(storage, dict) and set(storage) == {"items"},
+            "unexpected local container source schema")
+    items = storage["items"]
+    require(isinstance(items, dict) and items,
+            "expected local container source items")
+    require(all(isinstance(key, str) and DIGEST.fullmatch(key) is not None
+                and isinstance(value, dict) and not value for key, value in items.items()),
+            "expected image-ID keys with empty local source descriptors")
+    require(live_id in items and build_id in items,
+            "referenced Live or build image absent from sources")
+    # These snapshots guard against accidental changes to payload or other pipelines.
+    untouched = deepcopy([item for item in pipelines if item is not build])
+    original_sources = deepcopy(sources)
+    original_build = deepcopy(build)
+    build_images["references"] = {tools_id: {"name": tools_ref}}
+    items.setdefault(tools_id, {})
+    require([item for item in pipelines if item is not build] == untouched,
+            "non-build pipeline modified")
+    expected_build = deepcopy(original_build)
+    expected_build["stages"][0]["inputs"]["images"]["references"] = {tools_id: {"name": tools_ref}}
+    require(build == expected_build, "unrelated build options modified")
+    original_sources[STORAGE]["items"].setdefault(tools_id, {})
+    require(sources == original_sources, "unrelated sources modified")
+    return manifest
+
+
+def add_live_selinux_stage(manifest):
+    live = pipeline(manifest, "os-tree")
+    # The build-root transformation above deliberately never edits this pipeline.
+    # This is the pre-existing NOVA Live labeling fix, kept as a separate operation.
+    deployment_reference(live)
+    stages = live["stages"]
+    contexts = "etc/selinux/targeted/contexts/files/file_contexts"
+    if not any(stage.get("type") == "org.osbuild.selinux" and stage.get("options", {}).get("file_contexts") == contexts for stage in stages):
+        stages.append({"type": "org.osbuild.selinux", "options": {
+            "file_contexts": contexts,
+            # Kinoite's split-xattr repository shares content inodes with /usr.
+            # Relabel the active paths only, preserving their execution types.
+            "exclude_paths": ["sysroot/ostree/repo"],
+        }})
+
+
+def main():
+    if sys.argv[1:] in (["--version"], ["--help"]):
+        os.execv("/usr/bin/osbuild", ["/usr/bin/osbuild", *sys.argv[1:]])
+    if sys.argv[1:].count("-") != 1:
+        raise SystemExit("NOVA expects exactly one OSBuild manifest on standard input")
+    manifest = json.load(sys.stdin)
+    transform_build_environment(
+        manifest,
+        os.environ.get("NOVA_OSBUILD_TOOLS_REF"),
+        os.environ.get("NOVA_OSBUILD_TOOLS_ID"),
+        os.environ.get("NOVA_OSBUILD_LIVE_REF"),
+    )
+    add_live_selinux_stage(manifest)
+    path = Path("/output/nova-live.osbuild-manifest.json")
+    path.write_text(json.dumps(manifest, indent=2) + "\n")
+    arguments = [str(path) if value == "-" else value for value in sys.argv[1:]]
+    os.execv("/usr/bin/osbuild", ["/usr/bin/osbuild", *arguments])
+
+
+if __name__ == "__main__":
+    main()

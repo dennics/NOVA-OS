@@ -1,0 +1,743 @@
+{
+  "schema": 1,
+  "originalWorkspaceRelativePath": "outputs/NOVA-OS",
+  "preparedAtUtc": "2026-10-21T21:03:59.516198+00:00",
+  "note": "Original sources copied; publication documentation/helpers are additive. Hashes describe local bytes before Git EOL normalization, not a rebuilt ISO.",
+  "files": [
+    {
+      "path": ".containerignore",
+      "originalPath": ".containerignore",
+      "originalSha256": "ee8684f0a01c62efeb1b3af8fc581f5bd9d946b4a6511c81a4e3efcd28b392aa",
+      "publicationSha256": "ee8684f0a01c62efeb1b3af8fc581f5bd9d946b4a6511c81a4e3efcd28b392aa",
+      "unchangedBytes": true
+    },
+    {
+      "path": ".gitignore",
+      "originalPath": ".gitignore",
+      "originalSha256": "d3a478fcc02df3363c549741ac93c9613aaecf637afb99dee5125eed8bd64d9c",
+      "publicationSha256": "8113511af2ecef2221391d523d7865968f7e0ed4249fa88bc2059a94629e9352",
+      "unchangedBytes": false
+    },
+    {
+      "path": "CMakeLists.txt",
+      "originalPath": "CMakeLists.txt",
+      "originalSha256": "6306b90a0f6cfa27d2175d25fceb15000151eec479f58b2ab7e180d043ec51cb",
+      "publicationSha256": "6306b90a0f6cfa27d2175d25fceb15000151eec479f58b2ab7e180d043ec51cb",
+      "unchangedBytes": true
+    },
+    {
+      "path": "Containerfile",
+      "originalPath": "Containerfile",
+      "originalSha256": "8ec587725eccb0101fa226cd27bf9fa94707ac7fd819c010e356987944b3f181",
+      "publicationSha256": "8ec587725eccb0101fa226cd27bf9fa94707ac7fd819c010e356987944b3f181",
+      "unchangedBytes": true
+    },
+    {
+      "path": "Containerfile.build-tools",
+      "originalPath": "Containerfile.build-tools",
+      "originalSha256": "35415eace19c180be33e68a807a081b94b7376ef768b4b344ede5c39cf9dc4e3",
+      "publicationSha256": "35415eace19c180be33e68a807a081b94b7376ef768b4b344ede5c39cf9dc4e3",
+      "unchangedBytes": true
+    },
+    {
+      "path": "LICENSE",
+      "originalPath": "LICENSE",
+      "originalSha256": "f8b17dc7c92ec4a45a6c9bbd2b2a5e3321debf21b7778953a9e31416f2de9dc8",
+      "publicationSha256": "c9aca625d9c29bec765f9752448a668889c2047cf6bc7be3219d254360ac58a1",
+      "unchangedBytes": false
+    },
+    {
+      "path": "LICENSES/MIT-proposed.txt",
+      "originalPath": "LICENSE",
+      "originalSha256": "f8b17dc7c92ec4a45a6c9bbd2b2a5e3321debf21b7778953a9e31416f2de9dc8",
+      "publicationSha256": "f8b17dc7c92ec4a45a6c9bbd2b2a5e3321debf21b7778953a9e31416f2de9dc8",
+      "unchangedBytes": true
+    },
+    {
+      "path": "NOTICE.md",
+      "originalPath": "NOTICE.md",
+      "originalSha256": "325c1a981ebdd3bb3f52bfb898f6670485cf737734a398bb7c780a0e8b283ddd",
+      "publicationSha256": "4bf9274280600a8e8825cc8e90876af3197f06f325d1c8e2e53c3affe152b206",
+      "unchangedBytes": false
+    },
+    {
+      "path": "README.md",
+      "originalPath": "README.md",
+      "originalSha256": "be551809def4ea79e0ff5e34230d819a8a9bec2f54d1a3575ca8b7dbee10f1f0",
+      "publicationSha256": "554d669d159f8783eda48b8c5cc52972e1cdeb3d120eb3d97b6e9739a7d25126",
+      "unchangedBytes": false
+    },
+    {
+      "path": "assets/cosmic.svg",
+      "originalPath": "assets/cosmic.svg",
+      "originalSha256": "b594d25c4673948f97ef62295a74047bf7ed3508b4e6934c65b43d2fd03dc52e",
+      "publicationSha256": "b594d25c4673948f97ef62295a74047bf7ed3508b4e6934c65b43d2fd03dc52e",
+      "unchangedBytes": true
+    },
+    {
+      "path": "assets/nova-mark.svg",
+      "originalPath": "assets/nova-mark.svg",
+      "originalSha256": "3b4610dc783d7f458a88e93b5ca87afae4a4680ae3ec356787dc430c57293d14",
+      "publicationSha256": "3b4610dc783d7f458a88e93b5ca87afae4a4680ae3ec356787dc430c57293d14",
+      "unchangedBytes": true
+    },
+    {
+      "path": "docs/ACCEPTANCE.md",
+      "originalPath": "docs/ACCEPTANCE.md",
+      "originalSha256": "7dc3401d0ba00d1b6d89e7f57ea21903fb741ae2ee812f655b2f6ec2701b97a8",
+      "publicationSha256": "7dc3401d0ba00d1b6d89e7f57ea21903fb741ae2ee812f655b2f6ec2701b97a8",
+      "unchangedBytes": true
+    },
+    {
+      "path": "docs/BUILD.md",
+      "originalPath": "docs/BUILD.md",
+      "originalSha256": "02a8fd32043015b3bd56933489dc7acbad30156327f67372d2e0ebe5ce53387a",
+      "publicationSha256": "012eb9b631717070b2f2b1ffb4a91a65508b58380755738fc34022d4359ad5da",
+      "unchangedBytes": false
+    },
+    {
+      "path": "docs/NOVA-0.2.ro.md",
+      "originalPath": "docs/NOVA-0.2.md",
+      "originalSha256": "1aa7eaa51e6bebe8aef8225c5c4f934727faf54a2c6dc581a8ff979bbbdaee08",
+      "publicationSha256": "1aa7eaa51e6bebe8aef8225c5c4f934727faf54a2c6dc581a8ff979bbbdaee08",
+      "unchangedBytes": true
+    },
+    {
+      "path": "docs/VALIDATION.md",
+      "originalPath": "docs/VALIDATION.md",
+      "originalSha256": "12acd2ccd18e9e0c9129e195a3422f2c9d5c7ecec322d6e27915e2249bcdb591",
+      "publicationSha256": "b3d980ceb562d5a5bfe818a1b243485d5e2345835473bb9b5285d5dd4878e0ae",
+      "unchangedBytes": false
+    },
+    {
+      "path": "docs/VM.md",
+      "originalPath": "docs/VM.md",
+      "originalSha256": "11a74c8ff3742cfac9c756182e5a2a8c0f61a29ab9621af4e80ae86ad19cbb04",
+      "publicationSha256": "f9a7a62a7d1c01e6526f0d54867c2341d72356d4bbc17e05b70c8374e07b5425",
+      "unchangedBytes": false
+    },
+    {
+      "path": "docs/evidence/native-tests-2026-10-21.log",
+      "originalPath": "artifacts/native-tests.log",
+      "originalSha256": "2eb52fe91fe0c5082ee03191752fd779979a814ecb343a44f8a992ff49d9b1db",
+      "publicationSha256": "2eb52fe91fe0c5082ee03191752fd779979a814ecb343a44f8a992ff49d9b1db",
+      "unchangedBytes": true
+    },
+    {
+      "path": "docs/screenshots/drivers-0.2.png",
+      "originalPath": "artifacts/screenshots/drivers-0.2.png",
+      "originalSha256": "bea47cbb4d2fa3a38dcf75f52e367cc5b67dbfb08ae23224da13d8390cce9250",
+      "publicationSha256": "bea47cbb4d2fa3a38dcf75f52e367cc5b67dbfb08ae23224da13d8390cce9250",
+      "unchangedBytes": true
+    },
+    {
+      "path": "docs/screenshots/performance-0.2.png",
+      "originalPath": "artifacts/screenshots/performance-0.2.png",
+      "originalSha256": "c02f1f878e2e4d8d960e4e97b11269d7402bd41c1a7517ac073f47b9ba9d495d",
+      "publicationSha256": "c02f1f878e2e4d8d960e4e97b11269d7402bd41c1a7517ac073f47b9ba9d495d",
+      "unchangedBytes": true
+    },
+    {
+      "path": "docs/screenshots/updates-0.2.png",
+      "originalPath": "artifacts/screenshots/updates-0.2.png",
+      "originalSha256": "7adee8f2e0ea1d8caf8f2fb9068f0a22ab3c6872c8a5dcf4c17296a5335cee98",
+      "publicationSha256": "7adee8f2e0ea1d8caf8f2fb9068f0a22ab3c6872c8a5dcf4c17296a5335cee98",
+      "unchangedBytes": true
+    },
+    {
+      "path": "installer/etc/anaconda/conf.d/99-nova.conf",
+      "originalPath": "installer/etc/anaconda/conf.d/99-nova.conf",
+      "originalSha256": "beca9c35acd5bb0b686f44f9c828cbc1cb7e98be51104c2175d2f9003dd22cf0",
+      "publicationSha256": "beca9c35acd5bb0b686f44f9c828cbc1cb7e98be51104c2175d2f9003dd22cf0",
+      "unchangedBytes": true
+    },
+    {
+      "path": "installer/etc/dracut.conf.d/99-nova-live.conf",
+      "originalPath": "installer/etc/dracut.conf.d/99-nova-live.conf",
+      "originalSha256": "6a8d53e027feaeb461f448516be155d891ce54c61f947c534ffdcde16f0ae476",
+      "publicationSha256": "6a8d53e027feaeb461f448516be155d891ce54c61f947c534ffdcde16f0ae476",
+      "unchangedBytes": true
+    },
+    {
+      "path": "installer/etc/systemd/system/bootloader-update.service.d/10-nova-live.conf",
+      "originalPath": "installer/etc/systemd/system/bootloader-update.service.d/10-nova-live.conf",
+      "originalSha256": "f0264978b2bee3862ba984ed9cd1edffd1b52c92ffb9cfb9d69bbd0a7067d860",
+      "publicationSha256": "f0264978b2bee3862ba984ed9cd1edffd1b52c92ffb9cfb9d69bbd0a7067d860",
+      "unchangedBytes": true
+    },
+    {
+      "path": "installer/etc/xdg/kded_device_automounterrc",
+      "originalPath": "installer/etc/xdg/kded_device_automounterrc",
+      "originalSha256": "ff46ca2a3bea1675aa45c77a292be9ea6b4d3a7a7d62dd8edad08d41a92923d2",
+      "publicationSha256": "ff46ca2a3bea1675aa45c77a292be9ea6b4d3a7a7d62dd8edad08d41a92923d2",
+      "unchangedBytes": true
+    },
+    {
+      "path": "installer/usr/bin/nova-install",
+      "originalPath": "installer/usr/bin/nova-install",
+      "originalSha256": "6ef9d2baddb138564dccc450d186dafc750ac608579259cd8e55424d0f867dc0",
+      "publicationSha256": "6ef9d2baddb138564dccc450d186dafc750ac608579259cd8e55424d0f867dc0",
+      "unchangedBytes": true
+    },
+    {
+      "path": "installer/usr/libexec/nova-image/configure-live.sh",
+      "originalPath": "installer/usr/libexec/nova-image/configure-live.sh",
+      "originalSha256": "d030afc8f6ebc0c576a6d12bdece223366c726dae8169f520c019997a62c0436",
+      "publicationSha256": "d030afc8f6ebc0c576a6d12bdece223366c726dae8169f520c019997a62c0436",
+      "unchangedBytes": true
+    },
+    {
+      "path": "installer/usr/local/bin/bootc",
+      "originalPath": "installer/usr/local/bin/bootc",
+      "originalSha256": "5ba96889df8f1a1793fc6e3cc122c44fd35a32d9dabf0cf5717dc7b65cec6037",
+      "publicationSha256": "5ba96889df8f1a1793fc6e3cc122c44fd35a32d9dabf0cf5717dc7b65cec6037",
+      "unchangedBytes": true
+    },
+    {
+      "path": "installer/usr/share/applications/nova-install.desktop",
+      "originalPath": "installer/usr/share/applications/nova-install.desktop",
+      "originalSha256": "6847bb2b196d4834600c6f827a6f6e61704cfe1fe8a38499db5b15fd9a4675bb",
+      "publicationSha256": "6847bb2b196d4834600c6f827a6f6e61704cfe1fe8a38499db5b15fd9a4675bb",
+      "unchangedBytes": true
+    },
+    {
+      "path": "installer/usr/share/nova/installer.ks",
+      "originalPath": "installer/usr/share/nova/installer.ks",
+      "originalSha256": "ec81db688cc653a4a595db43f743279ab273cb7483e906af9e1719b639090f06",
+      "publicationSha256": "ec81db688cc653a4a595db43f743279ab273cb7483e906af9e1719b639090f06",
+      "unchangedBytes": true
+    },
+    {
+      "path": "installer/usr/share/nova/iso.yaml",
+      "originalPath": "installer/usr/share/nova/iso.yaml",
+      "originalSha256": "43e2eaf158dc6e4a3058151192ada0f8461bb08b7c8391e00c3a5d78b27159eb",
+      "publicationSha256": "43e2eaf158dc6e4a3058151192ada0f8461bb08b7c8391e00c3a5d78b27159eb",
+      "unchangedBytes": true
+    },
+    {
+      "path": "installer/var/lib/livesys/livesys-session-extra",
+      "originalPath": "installer/var/lib/livesys/livesys-session-extra",
+      "originalSha256": "16bf8e8c7c119bdbcc4cb67e39bae8cd569272f7f6ba8f82f97ad932e2814bb6",
+      "publicationSha256": "16bf8e8c7c119bdbcc4cb67e39bae8cd569272f7f6ba8f82f97ad932e2814bb6",
+      "unchangedBytes": true
+    },
+    {
+      "path": "scripts/bootstrap-builder.sh",
+      "originalPath": "scripts/bootstrap-builder.sh",
+      "originalSha256": "84a6e3a88b2241f8a4a28b5305dcb856096848a4f1a94709a96c0bb1bc5ae0f0",
+      "publicationSha256": "84a6e3a88b2241f8a4a28b5305dcb856096848a4f1a94709a96c0bb1bc5ae0f0",
+      "unchangedBytes": true
+    },
+    {
+      "path": "scripts/build-iso.sh",
+      "originalPath": "scripts/build-iso.sh",
+      "originalSha256": "651fa5edf000b72537e7d0ccc49053777b9c5c0365350a9dd9ff123b7b0380c2",
+      "publicationSha256": "651fa5edf000b72537e7d0ccc49053777b9c5c0365350a9dd9ff123b7b0380c2",
+      "unchangedBytes": true
+    },
+    {
+      "path": "scripts/build.sh",
+      "originalPath": "scripts/build.sh",
+      "originalSha256": "928c9be8582c9d4857f24f04f231a5096709a65e5939d36a12783a24a61da01a",
+      "publicationSha256": "928c9be8582c9d4857f24f04f231a5096709a65e5939d36a12783a24a61da01a",
+      "unchangedBytes": true
+    },
+    {
+      "path": "scripts/check-ui.sh",
+      "originalPath": "scripts/check-ui.sh",
+      "originalSha256": "c72bf4bb2d8b62de7c6ede99b094a6cf9aa12ea45b7b576fbecf4c6cf8f87f6a",
+      "publicationSha256": "c72bf4bb2d8b62de7c6ede99b094a6cf9aa12ea45b7b576fbecf4c6cf8f87f6a",
+      "unchangedBytes": true
+    },
+    {
+      "path": "scripts/configure-builder-storage.sh",
+      "originalPath": "scripts/configure-builder-storage.sh",
+      "originalSha256": "c9e344a068559ece2b4c4bbab898c0f1c1b42e196024a0ae0df4f117d5cb040a",
+      "publicationSha256": "c9e344a068559ece2b4c4bbab898c0f1c1b42e196024a0ae0df4f117d5cb040a",
+      "unchangedBytes": true
+    },
+    {
+      "path": "scripts/lock.sh",
+      "originalPath": "scripts/lock.sh",
+      "originalSha256": "1b4f9f16e349dd78ff244b0a49e14e4cc7eb4874886b6b62b7714028555ed9d5",
+      "publicationSha256": "1b4f9f16e349dd78ff244b0a49e14e4cc7eb4874886b6b62b7714028555ed9d5",
+      "unchangedBytes": true
+    },
+    {
+      "path": "scripts/osbuild",
+      "originalPath": "scripts/osbuild",
+      "originalSha256": "6e97c42472e83d9c847b4958b14e2e10e0db8d22ed6049a102ab5a4817bd05f9",
+      "publicationSha256": "6e97c42472e83d9c847b4958b14e2e10e0db8d22ed6049a102ab5a4817bd05f9",
+      "unchangedBytes": true
+    },
+    {
+      "path": "scripts/write-manifest.py",
+      "originalPath": "scripts/write-manifest.py",
+      "originalSha256": "04ef07ddb92df672f24ac71de670b1ab1f9f5e40256b05fe67a32ce54d5a4150",
+      "publicationSha256": "04ef07ddb92df672f24ac71de670b1ab1f9f5e40256b05fe67a32ce54d5a4150",
+      "unchangedBytes": true
+    },
+    {
+      "path": "sources.lock.json",
+      "originalPath": "sources.lock.json",
+      "originalSha256": "02fc45b09ab7a2d6e91f74f17e5ebf8ee6520874382e17be7b2d1282d5c53a29",
+      "publicationSha256": "02fc45b09ab7a2d6e91f74f17e5ebf8ee6520874382e17be7b2d1282d5c53a29",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/DesktopActions.cpp",
+      "originalPath": "src/DesktopActions.cpp",
+      "originalSha256": "e0052d2d5f0be4ce8908e70ab8c2c4a60f6ebf6b0c75852da7b187fa805224b9",
+      "publicationSha256": "e0052d2d5f0be4ce8908e70ab8c2c4a60f6ebf6b0c75852da7b187fa805224b9",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/DesktopActions.hpp",
+      "originalPath": "src/DesktopActions.hpp",
+      "originalSha256": "8c23c5bedd2a9072c277e4c2e312fb09549802a2223b12d9d8dac77969b70950",
+      "publicationSha256": "8c23c5bedd2a9072c277e4c2e312fb09549802a2223b12d9d8dac77969b70950",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/DriverCenter.cpp",
+      "originalPath": "src/DriverCenter.cpp",
+      "originalSha256": "300731b67809effcbb5f3d5e91ddb14aa9f36f845fb4200d519eaa28bdd86c2d",
+      "publicationSha256": "300731b67809effcbb5f3d5e91ddb14aa9f36f845fb4200d519eaa28bdd86c2d",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/DriverCenter.hpp",
+      "originalPath": "src/DriverCenter.hpp",
+      "originalSha256": "87bbe512810a5f6f0faf4c0630c4bee2e11d1135422bd6238d21bfa769045281",
+      "publicationSha256": "87bbe512810a5f6f0faf4c0630c4bee2e11d1135422bd6238d21bfa769045281",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/MetricsProvider.cpp",
+      "originalPath": "src/MetricsProvider.cpp",
+      "originalSha256": "493d515557cb5e81f365a33bf36753abeb67b8303b97e69818b41fe67359da5c",
+      "publicationSha256": "493d515557cb5e81f365a33bf36753abeb67b8303b97e69818b41fe67359da5c",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/MetricsProvider.hpp",
+      "originalPath": "src/MetricsProvider.hpp",
+      "originalSha256": "4d7e21c8fc8472f21df73320737ceaa14c1556722955905c4c9f1dd5002bcd23",
+      "publicationSha256": "4d7e21c8fc8472f21df73320737ceaa14c1556722955905c4c9f1dd5002bcd23",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/Preferences.cpp",
+      "originalPath": "src/Preferences.cpp",
+      "originalSha256": "f86a884dc308e5e138d43d7ea731b6a51b87ccae904c8bbc37930b0e8689f4fc",
+      "publicationSha256": "f86a884dc308e5e138d43d7ea731b6a51b87ccae904c8bbc37930b0e8689f4fc",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/Preferences.hpp",
+      "originalPath": "src/Preferences.hpp",
+      "originalSha256": "ef40d4c15c3c29452b2b1bf5a09aac8c1cc0fd57e65f2f0f7addb636bdd128f8",
+      "publicationSha256": "ef40d4c15c3c29452b2b1bf5a09aac8c1cc0fd57e65f2f0f7addb636bdd128f8",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/ProfileManager.cpp",
+      "originalPath": "src/ProfileManager.cpp",
+      "originalSha256": "d00b4c1277ea5114805de3112ce559d1af63a02931baf56792e0a734e13762f7",
+      "publicationSha256": "d00b4c1277ea5114805de3112ce559d1af63a02931baf56792e0a734e13762f7",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/ProfileManager.hpp",
+      "originalPath": "src/ProfileManager.hpp",
+      "originalSha256": "36db83b56fd6b6f23187918bd6c1b4ded4bd91aac770d72ed8a73072b2b5849f",
+      "publicationSha256": "36db83b56fd6b6f23187918bd6c1b4ded4bd91aac770d72ed8a73072b2b5849f",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/SystemInfo.cpp",
+      "originalPath": "src/SystemInfo.cpp",
+      "originalSha256": "8a6db18c62b596ccba5be96330644178e2a2471b3fd4a1cd248b36ddb97f8430",
+      "publicationSha256": "8a6db18c62b596ccba5be96330644178e2a2471b3fd4a1cd248b36ddb97f8430",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/SystemInfo.hpp",
+      "originalPath": "src/SystemInfo.hpp",
+      "originalSha256": "2a33596d3684b02af887080c38db7ba5fd6c46a3a6feb88e48b4777c88f41173",
+      "publicationSha256": "2a33596d3684b02af887080c38db7ba5fd6c46a3a6feb88e48b4777c88f41173",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/UpdateManager.cpp",
+      "originalPath": "src/UpdateManager.cpp",
+      "originalSha256": "1bab72c5cb4704316d33529eaadaa2fabd6dfc9f73a90ee1966fa3e95e978e67",
+      "publicationSha256": "1bab72c5cb4704316d33529eaadaa2fabd6dfc9f73a90ee1966fa3e95e978e67",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/UpdateManager.hpp",
+      "originalPath": "src/UpdateManager.hpp",
+      "originalSha256": "67282990987779c9aa645bd1b7a724a11001cc46bcb54a0bb0061bd4353cca2e",
+      "publicationSha256": "67282990987779c9aa645bd1b7a724a11001cc46bcb54a0bb0061bd4353cca2e",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/compat/CompatController.cpp",
+      "originalPath": "src/compat/CompatController.cpp",
+      "originalSha256": "0c2df87f02ac2722c907f968acb1cac933f557430578b4f167aae2bfe7cdba5c",
+      "publicationSha256": "0c2df87f02ac2722c907f968acb1cac933f557430578b4f167aae2bfe7cdba5c",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/compat/CompatController.hpp",
+      "originalPath": "src/compat/CompatController.hpp",
+      "originalSha256": "63d802fabe085ab1e898e7a4b5d621797d326bb2fdae359a6e07baf8a6598c93",
+      "publicationSha256": "63d802fabe085ab1e898e7a4b5d621797d326bb2fdae359a6e07baf8a6598c93",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/compat/CompatInspector.cpp",
+      "originalPath": "src/compat/CompatInspector.cpp",
+      "originalSha256": "3969e1a3a4c99b09ddeaded59f4e3ecd9caf9efdc72f992619ff2b0c160e7c65",
+      "publicationSha256": "3969e1a3a4c99b09ddeaded59f4e3ecd9caf9efdc72f992619ff2b0c160e7c65",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/compat/CompatInspector.hpp",
+      "originalPath": "src/compat/CompatInspector.hpp",
+      "originalSha256": "b3e4a82b4436ac1cfbea5687fee644d908c340c8fc10c23fcc45eafe58eec447",
+      "publicationSha256": "b3e4a82b4436ac1cfbea5687fee644d908c340c8fc10c23fcc45eafe58eec447",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/compat/main.cpp",
+      "originalPath": "src/compat/main.cpp",
+      "originalSha256": "88864a20cc9f52126f46a4fda19868ef72475784db8fb43487b42edc463774cf",
+      "publicationSha256": "88864a20cc9f52126f46a4fda19868ef72475784db8fb43487b42edc463774cf",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/core/SystemMetrics.cpp",
+      "originalPath": "src/core/SystemMetrics.cpp",
+      "originalSha256": "134b3093d8301d03842c34f4afc61a9c8c075ca9d0717b355f4ff8dde49b5f2b",
+      "publicationSha256": "134b3093d8301d03842c34f4afc61a9c8c075ca9d0717b355f4ff8dde49b5f2b",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/core/SystemMetrics.hpp",
+      "originalPath": "src/core/SystemMetrics.hpp",
+      "originalSha256": "62a9cc68a4b45deecde3cfec08c26f5f274ef617cee21f8cca6d16fcb1ff6196",
+      "publicationSha256": "62a9cc68a4b45deecde3cfec08c26f5f274ef617cee21f8cca6d16fcb1ff6196",
+      "unchangedBytes": true
+    },
+    {
+      "path": "src/main.cpp",
+      "originalPath": "src/main.cpp",
+      "originalSha256": "9cd635d0a05b5ba749b933e4f9b2a25078b31d20be7b13560e74febdc4bbbdd0",
+      "publicationSha256": "9cd635d0a05b5ba749b933e4f9b2a25078b31d20be7b13560e74febdc4bbbdd0",
+      "unchangedBytes": true
+    },
+    {
+      "path": "system/etc/xdg/autostart/nova-welcome.desktop",
+      "originalPath": "system/etc/xdg/autostart/nova-welcome.desktop",
+      "originalSha256": "de145502c0453064861b7449026815fe97b6e8ec666d9ebe1e86f9c3bd1d0c9a",
+      "publicationSha256": "de145502c0453064861b7449026815fe97b6e8ec666d9ebe1e86f9c3bd1d0c9a",
+      "unchangedBytes": true
+    },
+    {
+      "path": "system/etc/xdg/mimeapps.list",
+      "originalPath": "system/etc/xdg/mimeapps.list",
+      "originalSha256": "39c307b48aeb1d696c730873b6eacfc609d863ffe139f51d4321a375e63599dd",
+      "publicationSha256": "39c307b48aeb1d696c730873b6eacfc609d863ffe139f51d4321a375e63599dd",
+      "unchangedBytes": true
+    },
+    {
+      "path": "system/usr/bin/nova-run-exe",
+      "originalPath": "system/usr/bin/nova-run-exe",
+      "originalSha256": "b97775d9f1158ce4c968490b9c9b259c5f26a11e9be7ed14a24a8cbed4c0283c",
+      "publicationSha256": "b97775d9f1158ce4c968490b9c9b259c5f26a11e9be7ed14a24a8cbed4c0283c",
+      "unchangedBytes": true
+    },
+    {
+      "path": "system/usr/lib/bootc/kargs.d/50-nova-boot.toml",
+      "originalPath": "system/usr/lib/bootc/kargs.d/50-nova-boot.toml",
+      "originalSha256": "a400b29b4e69b22f7b41eef3c7a7d2309ca659f81bc6e03e69cafd1bc8c113f4",
+      "publicationSha256": "a400b29b4e69b22f7b41eef3c7a7d2309ca659f81bc6e03e69cafd1bc8c113f4",
+      "unchangedBytes": true
+    },
+    {
+      "path": "system/usr/lib/tmpfiles.d/nova-wine.conf",
+      "originalPath": "system/usr/lib/tmpfiles.d/nova-wine.conf",
+      "originalSha256": "ddf65d0ffacaa368fd88674f5e55a7ca5d7c40f90dafc31aca761cfff6076b4d",
+      "publicationSha256": "ddf65d0ffacaa368fd88674f5e55a7ca5d7c40f90dafc31aca761cfff6076b4d",
+      "unchangedBytes": true
+    },
+    {
+      "path": "system/usr/lib/tmpfiles.d/nova.conf",
+      "originalPath": "system/usr/lib/tmpfiles.d/nova.conf",
+      "originalSha256": "ba5da20916199f6d4d07b495b183811c17ba6be4f309ec4be4b1e3499129ed4b",
+      "publicationSha256": "ba5da20916199f6d4d07b495b183811c17ba6be4f309ec4be4b1e3499129ed4b",
+      "unchangedBytes": true
+    },
+    {
+      "path": "system/usr/libexec/nova-image/configure-plymouth.sh",
+      "originalPath": "system/usr/libexec/nova-image/configure-plymouth.sh",
+      "originalSha256": "dac9762456f827fd89d085799b5ecf7720eb03abc698a64e66cdb1bc00d0ed5e",
+      "publicationSha256": "dac9762456f827fd89d085799b5ecf7720eb03abc698a64e66cdb1bc00d0ed5e",
+      "unchangedBytes": true
+    },
+    {
+      "path": "system/usr/libexec/nova-image/configure-runtime.sh",
+      "originalPath": "system/usr/libexec/nova-image/configure-runtime.sh",
+      "originalSha256": "c817095ac5a19c5bb37e1e565fb5d28895730c24684a4cfadad7c067a05a2644",
+      "publicationSha256": "c817095ac5a19c5bb37e1e565fb5d28895730c24684a4cfadad7c067a05a2644",
+      "unchangedBytes": true
+    },
+    {
+      "path": "system/usr/libexec/nova-update-helper",
+      "originalPath": "system/usr/libexec/nova-update-helper",
+      "originalSha256": "590f69e8af53a6baaa7f33043cd7f8940f87546cebfc7084802614a4c6418d99",
+      "publicationSha256": "590f69e8af53a6baaa7f33043cd7f8940f87546cebfc7084802614a4c6418d99",
+      "unchangedBytes": true
+    },
+    {
+      "path": "system/usr/share/applications/nova-wine.desktop",
+      "originalPath": "system/usr/share/applications/nova-wine.desktop",
+      "originalSha256": "a30b71fa3548bb45cc8ea250a7141c678b670689489f9b77f741f2f9fe56a778",
+      "publicationSha256": "a30b71fa3548bb45cc8ea250a7141c678b670689489f9b77f741f2f9fe56a778",
+      "unchangedBytes": true
+    },
+    {
+      "path": "system/usr/share/applications/org.novaos.ControlCenter.desktop",
+      "originalPath": "system/usr/share/applications/org.novaos.ControlCenter.desktop",
+      "originalSha256": "0bb52aa109cbe9a263305fb4f9e577235207ce88b848cae864e044a2b78310e1",
+      "publicationSha256": "0bb52aa109cbe9a263305fb4f9e577235207ce88b848cae864e044a2b78310e1",
+      "unchangedBytes": true
+    },
+    {
+      "path": "system/usr/share/color-schemes/NovaDark.colors",
+      "originalPath": "system/usr/share/color-schemes/NovaDark.colors",
+      "originalSha256": "48a8d991d23e5f2d6c337e908591294a8261741a585c7b8547fb963e847a3b7f",
+      "publicationSha256": "48a8d991d23e5f2d6c337e908591294a8261741a585c7b8547fb963e847a3b7f",
+      "unchangedBytes": true
+    },
+    {
+      "path": "system/usr/share/plasma/look-and-feel/org.novaos.desktop/contents/defaults",
+      "originalPath": "system/usr/share/plasma/look-and-feel/org.novaos.desktop/contents/defaults",
+      "originalSha256": "41f1530f4530bda7abb83c77656e142159bde112f9303a9c3dde791a9fa6fd29",
+      "publicationSha256": "41f1530f4530bda7abb83c77656e142159bde112f9303a9c3dde791a9fa6fd29",
+      "unchangedBytes": true
+    },
+    {
+      "path": "system/usr/share/plasma/look-and-feel/org.novaos.desktop/contents/layouts/org.kde.plasma.desktop-layout.js",
+      "originalPath": "system/usr/share/plasma/look-and-feel/org.novaos.desktop/contents/layouts/org.kde.plasma.desktop-layout.js",
+      "originalSha256": "e305b82b6ac46476fc1155e326b8e5d841651ba06c7a0f1c16180ad0c98fac13",
+      "publicationSha256": "e4b5b8b91d809eb4737388e6aa8919ecaa072e590a1b80c0862be1c43b6af060",
+      "unchangedBytes": false
+    },
+    {
+      "path": "system/usr/share/plasma/look-and-feel/org.novaos.desktop/metadata.json",
+      "originalPath": "system/usr/share/plasma/look-and-feel/org.novaos.desktop/metadata.json",
+      "originalSha256": "114d68ec8be04f145bf359ce5d74175554dd1cef4ceb7262bdf901e60bfb99b8",
+      "publicationSha256": "64e83977cfd42de5190e9649590fdd0766454ce9ce69bdcbcde1688ba7c2a38c",
+      "unchangedBytes": false
+    },
+    {
+      "path": "system/usr/share/polkit-1/actions/org.novaos.update.policy",
+      "originalPath": "system/usr/share/polkit-1/actions/org.novaos.update.policy",
+      "originalSha256": "90b0093e35d16bcd3172ea9c31a3d90a96f305401449d9bab35006a230fea8d0",
+      "publicationSha256": "90b0093e35d16bcd3172ea9c31a3d90a96f305401449d9bab35006a230fea8d0",
+      "unchangedBytes": true
+    },
+    {
+      "path": "system/usr/share/wallpapers/NovaDark/metadata.json",
+      "originalPath": "system/usr/share/wallpapers/NovaDark/metadata.json",
+      "originalSha256": "df666149772ec20e954f697c927a6283d9848e8c0c620ac4e3e46d664a3af1c6",
+      "publicationSha256": "6dae927a633914f7e876c77e882bfa7593080a736c62828aa2ba5946e647a948",
+      "unchangedBytes": false
+    },
+    {
+      "path": "tests/backend_test.cpp",
+      "originalPath": "tests/backend_test.cpp",
+      "originalSha256": "47c9ee49703a171e92b04a06abe195daf2d786df12c27200bde4946e8cf3736c",
+      "publicationSha256": "47c9ee49703a171e92b04a06abe195daf2d786df12c27200bde4946e8cf3736c",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tests/compatibility_test.cpp",
+      "originalPath": "tests/compatibility_test.cpp",
+      "originalSha256": "25ce14dfe2f0129f3b1fadc6c634eba26aa5a1d0aeeb0cd5f9d119362abc1239",
+      "publicationSha256": "25ce14dfe2f0129f3b1fadc6c634eba26aa5a1d0aeeb0cd5f9d119362abc1239",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tests/fixtures/rar/README.md",
+      "originalPath": "tests/fixtures/rar/README.md",
+      "originalSha256": "b66f8dcdc48087972b096628b95ce40a627263e98adb6d9a29be6dd36d3466bc",
+      "publicationSha256": "b66f8dcdc48087972b096628b95ce40a627263e98adb6d9a29be6dd36d3466bc",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tests/fixtures/rar/testfile.rar5.rar",
+      "originalPath": "tests/fixtures/rar/testfile.rar5.rar",
+      "originalSha256": "a546b39c1aa42669543ef81f5ec8c4ef49fc7c2e5b8d08ab10549e919996e1a4",
+      "publicationSha256": "a546b39c1aa42669543ef81f5ec8c4ef49fc7c2e5b8d08ab10549e919996e1a4",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tests/fixtures/rar/testfile.txt",
+      "originalPath": "tests/fixtures/rar/testfile.txt",
+      "originalSha256": "b2f51cd17b3cbe77f091f887d91110164a2cb5a5a9ebe828c44d655c83dca8eb",
+      "publicationSha256": "b2f51cd17b3cbe77f091f887d91110164a2cb5a5a9ebe828c44d655c83dca8eb",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tests/metrics_test.cpp",
+      "originalPath": "tests/metrics_test.cpp",
+      "originalSha256": "458e0197a401564c283f830fe547e1192906ddc9a569b3b075910863f1e7ffbc",
+      "publicationSha256": "458e0197a401564c283f830fe547e1192906ddc9a569b3b075910863f1e7ffbc",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tests/probe_guest.py",
+      "originalPath": "tests/probe_guest.py",
+      "originalSha256": "8d4bd3b3c765c9130660bf868024fb5a3a401283e9859a19290c6d7415fc0194",
+      "publicationSha256": "8d4bd3b3c765c9130660bf868024fb5a3a401283e9859a19290c6d7415fc0194",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tests/rar_extraction.sh",
+      "originalPath": "tests/rar_extraction.sh",
+      "originalSha256": "2c96b649f6398a3c4316cdfe2296c84b5cc2cba6b61cc31212e380443c43de25",
+      "publicationSha256": "2c96b649f6398a3c4316cdfe2296c84b5cc2cba6b61cc31212e380443c43de25",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tests/ui_test.cpp",
+      "originalPath": "tests/ui_test.cpp",
+      "originalSha256": "5aedb80f61c420605fc232be2a2d28bf511559ff7acefcc59c3cde383ac86aab",
+      "publicationSha256": "5aedb80f61c420605fc232be2a2d28bf511559ff7acefcc59c3cde383ac86aab",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tools/host.py",
+      "originalPath": "tools/host.py",
+      "originalSha256": "8e2aa996be590174b53ba7b9ce5584b5a9cb111dfd5c0841fb4734e03fdff757",
+      "publicationSha256": "8e2aa996be590174b53ba7b9ce5584b5a9cb111dfd5c0841fb4734e03fdff757",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tools/media/media-writer-provenance.json",
+      "originalPath": "tools/media/media-writer-provenance.json",
+      "originalSha256": "a7ab48f4e96a56c35862397ff9762195c4517caf5abb208907152ce830ac8127",
+      "publicationSha256": "a7ab48f4e96a56c35862397ff9762195c4517caf5abb208907152ce830ac8127",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tools/nova-media-creator/App.cs",
+      "originalPath": "tools/nova-media-creator/App.cs",
+      "originalSha256": "b31fa879c1467595f8ef7bd6f94d0fe56d1ce81c408cb459086d9e364701ce26",
+      "publicationSha256": "b31fa879c1467595f8ef7bd6f94d0fe56d1ce81c408cb459086d9e364701ce26",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tools/nova-media-creator/README.md",
+      "originalPath": "tools/nova-media-creator/README.md",
+      "originalSha256": "7a5e06a4a339638411c8075d97081a0edbcac6bf697d69dd46a72385f5fb4fbb",
+      "publicationSha256": "7a5e06a4a339638411c8075d97081a0edbcac6bf697d69dd46a72385f5fb4fbb",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tools/nova-media-creator/app.manifest",
+      "originalPath": "tools/nova-media-creator/app.manifest",
+      "originalSha256": "9df6ca7da6aa9a141930b3e97b7a33b7a846686566fd80fb07c870e5e85b4a23",
+      "publicationSha256": "9df6ca7da6aa9a141930b3e97b7a33b7a846686566fd80fb07c870e5e85b4a23",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tools/nova-media-creator/build.ps1",
+      "originalPath": "tools/nova-media-creator/build.ps1",
+      "originalSha256": "ba72e3684e3584a4b264c386b623be0ea38eb18d059f1517aae78722c7c7bd56",
+      "publicationSha256": "ba72e3684e3584a4b264c386b623be0ea38eb18d059f1517aae78722c7c7bd56",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tools/nova-media-creator/package_usb_kit.py",
+      "originalPath": "tools/nova-media-creator/package_usb_kit.py",
+      "originalSha256": "7bd5415bd4fc714af9b4c68e5eed696934a8a26feb94e6961b8b46be17b6f0e4",
+      "publicationSha256": "7bd5415bd4fc714af9b4c68e5eed696934a8a26feb94e6961b8b46be17b6f0e4",
+      "unchangedBytes": true
+    },
+    {
+      "path": "tools/nova-media-creator/preview.manifest",
+      "originalPath": "tools/nova-media-creator/preview.manifest",
+      "originalSha256": "39581a00eddb61efab2b644582dbb33322f45806a257f249079e1c2360cb2dac",
+      "publicationSha256": "39581a00eddb61efab2b644582dbb33322f45806a257f249079e1c2360cb2dac",
+      "unchangedBytes": true
+    },
+    {
+      "path": "ui/Compatibility.qml",
+      "originalPath": "ui/Compatibility.qml",
+      "originalSha256": "0b1427ecaf4a3d99b93f56b9b3f5a05954a0c3ce5eba52ad401aea35ad5e9b86",
+      "publicationSha256": "0b1427ecaf4a3d99b93f56b9b3f5a05954a0c3ce5eba52ad401aea35ad5e9b86",
+      "unchangedBytes": true
+    },
+    {
+      "path": "ui/Main.qml",
+      "originalPath": "ui/Main.qml",
+      "originalSha256": "b441065c5a3ae22b0551b1388aec24af3ab215ce6ae542c5e9ca84ee43e19b34",
+      "publicationSha256": "b441065c5a3ae22b0551b1388aec24af3ab215ce6ae542c5e9ca84ee43e19b34",
+      "unchangedBytes": true
+    },
+    {
+      "path": "ui/MetricBar.qml",
+      "originalPath": "ui/MetricBar.qml",
+      "originalSha256": "340b98c44957ac5312f7e43f8c87e75cbe175b21811e1c22a9d5691bdbd26ac0",
+      "publicationSha256": "340b98c44957ac5312f7e43f8c87e75cbe175b21811e1c22a9d5691bdbd26ac0",
+      "unchangedBytes": true
+    },
+    {
+      "path": "ui/NavItem.qml",
+      "originalPath": "ui/NavItem.qml",
+      "originalSha256": "7c463cfcc7e2083eb5771e655ac69192276c8b48755d6ba260309ccc4b44e1cd",
+      "publicationSha256": "7c463cfcc7e2083eb5771e655ac69192276c8b48755d6ba260309ccc4b44e1cd",
+      "unchangedBytes": true
+    },
+    {
+      "path": "ui/NovaButton.qml",
+      "originalPath": "ui/NovaButton.qml",
+      "originalSha256": "558523849017d67ebad93fa707d1e19a7740805753f3093c994a84d1019dca7f",
+      "publicationSha256": "558523849017d67ebad93fa707d1e19a7740805753f3093c994a84d1019dca7f",
+      "unchangedBytes": true
+    },
+    {
+      "path": "ui/NovaCard.qml",
+      "originalPath": "ui/NovaCard.qml",
+      "originalSha256": "62065925622b7d301deb5a4dc70d015c297c4982ba78e226eeb795659be4bad0",
+      "publicationSha256": "62065925622b7d301deb5a4dc70d015c297c4982ba78e226eeb795659be4bad0",
+      "unchangedBytes": true
+    },
+    {
+      "path": "ui/NovaIcon.qml",
+      "originalPath": "ui/NovaIcon.qml",
+      "originalSha256": "ae098c86aea6f27348c90619f3ad32d3634d9d25b3257b99044394c000574e73",
+      "publicationSha256": "ae098c86aea6f27348c90619f3ad32d3634d9d25b3257b99044394c000574e73",
+      "unchangedBytes": true
+    },
+    {
+      "path": "ui/Theme.qml",
+      "originalPath": "ui/Theme.qml",
+      "originalSha256": "ff4b2fd5a86dc0f961edc24980447e01523ee5edb0c54b34d07cdf10f837ebf9",
+      "publicationSha256": "ff4b2fd5a86dc0f961edc24980447e01523ee5edb0c54b34d07cdf10f837ebf9",
+      "unchangedBytes": true
+    },
+    {
+      "path": "ui/qmldir",
+      "originalPath": "ui/qmldir",
+      "originalSha256": "7584ad6f06e35125d575e558569a3fb08a702801883ad32767b995264dfa61ef",
+      "publicationSha256": "7584ad6f06e35125d575e558569a3fb08a702801883ad32767b995264dfa61ef",
+      "unchangedBytes": true
+    }
+  ]
+}

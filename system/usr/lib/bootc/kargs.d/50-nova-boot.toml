@@ -1,0 +1,3 @@
+# Image-owned graphical boot defaults, including GUI Anaconda installations.
+# Keep root, LUKS and machine-specific console arguments owned by the installer.
+kargs = ["rhgb", "quiet"]

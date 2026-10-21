@@ -1,0 +1,11 @@
+{
+  "name": "Fedora Media Writer",
+  "version": "5.3.2",
+  "source": "https://github.com/FedoraQt/MediaWriter/releases/tag/5.3.2",
+  "download": "https://github.com/FedoraQt/MediaWriter/releases/download/5.3.2/FedoraMediaWriter-win64-portable-5.3.2.zip",
+  "sha256": "1043a01b5bfc4b0a79b4f431696eeaeb18c605f38579009877aada3a836904da",
+  "verifiedAt": "2026-10-19T15:40:28.620420+00:00",
+  "executable": "FedoraMediaWriter-5.3.2/mediawriter.exe",
+  "executed": false,
+  "usbWritten": false
+}

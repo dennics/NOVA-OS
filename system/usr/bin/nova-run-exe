@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+set -euo pipefail
+if (($# != 1)) || [[ ! "$1" =~ \.[Ee][Xx][Ee]$ ]] || [[ ! -f "$1" ]]; then
+    echo 'Select an existing Windows .exe file.' >&2
+    exit 64
+fi
+if (( EUID == 0 )); then
+    echo 'Run Windows programs as your regular user.' >&2
+    exit 1
+fi
+exec nova-compatibility "$1"

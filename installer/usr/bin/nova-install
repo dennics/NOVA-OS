@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+set -euo pipefail
+if ! grep -qw 'rd.live.image' /proc/cmdline; then
+    echo 'NOVA Installer is available only in the Live session.' >&2
+    exit 1
+fi
+# Live Anaconda reads its payload from interactive-defaults.ks; liveinst rejects --kickstart.
+exec liveinst "$@"
+

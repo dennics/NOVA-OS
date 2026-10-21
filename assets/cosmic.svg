@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3840" height="2160" viewBox="0 0 3840 2160">
+ <defs>
+  <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#080c17"/><stop offset=".5" stop-color="#101527"/><stop offset="1" stop-color="#0b0916"/></linearGradient>
+  <radialGradient id="blue"><stop stop-color="#2564aa" stop-opacity=".5"/><stop offset="1" stop-color="#10234c" stop-opacity="0"/></radialGradient>
+  <radialGradient id="violet"><stop stop-color="#7353ba" stop-opacity=".42"/><stop offset="1" stop-color="#211338" stop-opacity="0"/></radialGradient>
+  <radialGradient id="sphere" cx=".28" cy=".18" r=".86"><stop stop-color="#4a5a86"/><stop offset=".28" stop-color="#242c49"/><stop offset=".7" stop-color="#101421"/><stop offset="1" stop-color="#080b13"/></radialGradient>
+  <linearGradient id="rim" x1=".2" y1="0" x2=".8" y2="1"><stop stop-color="#8acfff" stop-opacity=".9"/><stop offset=".32" stop-color="#727dce" stop-opacity=".45"/><stop offset=".8" stop-color="#9775ff" stop-opacity="0"/></linearGradient>
+  <linearGradient id="orbit" x2="1" y2=".1"><stop stop-color="#57c7ff" stop-opacity="0"/><stop offset=".45" stop-color="#64a2e9" stop-opacity=".5"/><stop offset=".7" stop-color="#b09af1" stop-opacity=".7"/><stop offset="1" stop-color="#9775ff" stop-opacity="0"/></linearGradient>
+ </defs>
+ <rect width="3840" height="2160" fill="url(#bg)"/>
+ <ellipse cx="1160" cy="520" rx="1600" ry="1100" fill="url(#blue)"/>
+ <ellipse cx="3020" cy="1850" rx="1700" ry="1200" fill="url(#violet)"/>
+ <g fill="#d3e5ff" opacity=".45">
+  <circle cx="260" cy="350" r="2"/><circle cx="715" cy="730" r="1.5"/><circle cx="1010" cy="280" r="2"/><circle cx="1600" cy="610" r="1.5"/>
+  <circle cx="1860" cy="240" r="2"/><circle cx="2330" cy="390" r="1.5"/><circle cx="2880" cy="180" r="2"/><circle cx="3320" cy="520" r="1.5"/>
+  <circle cx="3530" cy="920" r="2"/><circle cx="420" cy="1250" r="1.5"/><circle cx="980" cy="1570" r="2"/><circle cx="1450" cy="1320" r="1.5"/>
+  <circle cx="1820" cy="1790" r="2"/><circle cx="540" cy="1900" r="1.5"/><circle cx="1290" cy="2010" r="2"/><circle cx="3650" cy="1780" r="1.5"/>
+ </g>
+ <ellipse cx="2650" cy="1350" rx="1190" ry="100" transform="rotate(-24 2650 1350)" fill="none" stroke="url(#orbit)" stroke-width="2"/>
+ <circle cx="2700" cy="1430" r="790" fill="url(#sphere)" stroke="url(#rim)" stroke-width="3"/>
+ <path d="M1906 1428a794 794 0 0 1 1118-729" fill="none" stroke="#9fd9ff" stroke-opacity=".18" stroke-width="8"/>
+ <path d="M1540 1940c780-590 1660-880 2260-820" fill="none" stroke="url(#orbit)" stroke-width="2"/>
+ <path d="M1500 1980c810-620 1680-900 2320-850" fill="none" stroke="url(#orbit)" stroke-width=".8" opacity=".35"/>
+ <circle cx="1570" cy="840" r="6" fill="#b4dfff" opacity=".8"/>
+ <path d="M1552 840h36m-18-18v36" stroke="#a0d9ff" opacity=".3"/>
+</svg>
+

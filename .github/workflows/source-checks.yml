@@ -1,0 +1,26 @@
+name: Source checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  source-and-metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4, verified during preparation
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Publication helper tests
+        run: python tests/publication_test.py
+      - name: Worktree and complete reachable history audit
+        run: python scripts/audit-publication.py
+      - name: Build portable metrics target
+        run: cmake -S . -B build/metrics -DNOVA_BUILD_DESKTOP=OFF -DBUILD_TESTING=ON
+      - name: Compile metrics
+        run: cmake --build build/metrics --parallel 2
+      - name: Metrics parser test
+        run: ctest --test-dir build/metrics --output-on-failure
+      # Full Qt/KDE and ISO/VM tests require the dedicated Fedora environment.

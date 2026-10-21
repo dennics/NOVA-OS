@@ -1,0 +1,92 @@
+Start testing: Oct 21 21:00 UTC
+----------------------------------------------------------
+1/4 Testing: metrics-parser
+1/4 Test: metrics-parser
+Command: "/home/builder/nova-publication/build/native/nova_metrics_test"
+Directory: /home/builder/nova-publication/build/native
+"metrics-parser" start time: Oct 21 21:00 UTC
+Output:
+----------------------------------------------------------
+CPU interval, guest accounting, reset, memory cache and malformed-source checks passed
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"metrics-parser" end time: Oct 21 21:00 UTC
+"metrics-parser" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/4 Testing: compatibility-parser
+2/4 Test: compatibility-parser
+Command: "/home/builder/nova-publication/build/native/nova_compat_test"
+Directory: /home/builder/nova-publication/build/native
+"compatibility-parser" start time: Oct 21 21:00 UTC
+Output:
+----------------------------------------------------------
+********* Start testing of CompatibilityTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 16.2.1 20260819 (Red Hat 16.2.1-2)), fedora 44
+PASS   : CompatibilityTest::initTestCase()
+PASS   : CompatibilityTest::rejectsInvalidFiles()
+PASS   : CompatibilityTest::limitsWineToSupportedArchitecture()
+PASS   : CompatibilityTest::nativeSuggestionRequiresEmbeddedProduct()
+PASS   : CompatibilityTest::truncatedResourcesAreSafe()
+PASS   : CompatibilityTest::cleanupTestCase()
+Totals: 6 passed, 0 failed, 0 skipped, 0 blacklisted, 2ms
+********* Finished testing of CompatibilityTest *********
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"compatibility-parser" end time: Oct 21 21:00 UTC
+"compatibility-parser" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/4 Testing: preference-persistence-and-monitor-lifecycle
+3/4 Test: preference-persistence-and-monitor-lifecycle
+Command: "/home/builder/nova-publication/build/native/nova_backend_test"
+Directory: /home/builder/nova-publication/build/native
+"preference-persistence-and-monitor-lifecycle" start time: Oct 21 21:00 UTC
+Output:
+----------------------------------------------------------
+********* Start testing of BackendTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 16.2.1 20260819 (Red Hat 16.2.1-2)), fedora 44
+PASS   : BackendTest::initTestCase()
+PASS   : BackendTest::preferencePersistenceAndValidation()
+PASS   : BackendTest::samplingStopsWhenInactive()
+PASS   : BackendTest::liveReducedEffectsOverridesCinematic()
+PASS   : BackendTest::unavailableFilesStayUnavailable()
+PASS   : BackendTest::desktopActionsAreAnAllowlist()
+PASS   : BackendTest::cleanupTestCase()
+Totals: 7 passed, 0 failed, 0 skipped, 0 blacklisted, 2213ms
+********* Finished testing of BackendTest *********
+<end of output>
+Test time =   2.22 sec
+----------------------------------------------------------
+Test Passed.
+"preference-persistence-and-monitor-lifecycle" end time: Oct 21 21:00 UTC
+"preference-persistence-and-monitor-lifecycle" time elapsed: 00:00:02
+----------------------------------------------------------
+
+4/4 Testing: keyboard-and-page-lifecycle
+4/4 Test: keyboard-and-page-lifecycle
+Command: "/home/builder/nova-publication/build/native/nova_ui_test"
+Directory: /home/builder/nova-publication/build/native
+"keyboard-and-page-lifecycle" start time: Oct 21 21:00 UTC
+Output:
+----------------------------------------------------------
+********* Start testing of UiTest *********
+Config: Using QtTest library 6.11.2, Qt 6.11.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 16.2.1 20260819 (Red Hat 16.2.1-2)), fedora 44
+PASS   : UiTest::initTestCase()
+PASS   : UiTest::keyboardNavigationAndPageLifecycle()
+PASS   : UiTest::cleanupTestCase()
+Totals: 3 passed, 0 failed, 0 skipped, 0 blacklisted, 3230ms
+********* Finished testing of UiTest *********
+<end of output>
+Test time =   3.27 sec
+----------------------------------------------------------
+Test Passed.
+"keyboard-and-page-lifecycle" end time: Oct 21 21:00 UTC
+"keyboard-and-page-lifecycle" time elapsed: 00:00:03
+----------------------------------------------------------
+
+End testing: Oct 21 21:00 UTC

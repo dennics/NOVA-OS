@@ -1,0 +1,12 @@
+{
+  "KPackageStructure": "Plasma/LookAndFeel",
+  "KPlugin": {
+    "Id": "org.novaos.desktop",
+    "Name": "NOVA Dark",
+    "Description": "Cosmic colors and a focused NOVA workspace",
+    "Version": "0.2.0",
+    "License": "LicenseRef-NOVA-Pending",
+    "Authors": [{"Name": "NOVA OS contributors"}]
+  }
+}
+

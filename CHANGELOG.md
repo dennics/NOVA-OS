@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2 Preview — publication preparation, 2026-10-22
+## 0.2 Preview — source publication, 2026-10-22
 
 Source snapshot only; no stable or recommended binary release.
 
@@ -13,11 +13,12 @@ Source snapshot only; no stable or recommended binary release.
   and Windows USB utility source.
 - English architecture/build/VM documentation, contribution/security guidance,
   source provenance and publication audit.
+- Owner-approved MIT license for original NOVA code, documentation and graphics.
 
 Unresolved: target-root temporary directories fail bootc validation; `TMPDIR`
 alone does not prevent `/var/tmp` image-import exhaustion. Historical builds
 depend on unpublished 0.1 bootstrap images. No full fix, fresh-host ISO reproduction
-or successful 0.2 hardware installation is claimed. License and push await approval.
+or successful 0.2 hardware installation is claimed.
 
 ## 0.1 development baseline
 

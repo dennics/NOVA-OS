@@ -2,7 +2,7 @@
   "KPlugin": {
     "Id": "NovaDark",
     "Name": "NOVA — Cosmic",
-    "License": "LicenseRef-NOVA-Pending",
+    "License": "MIT",
     "Authors": [{"Name": "NOVA OS contributors"}]
   }
 }

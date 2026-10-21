@@ -1,4 +1,4 @@
-// Original NOVA layout. Publication license approval pending; see root LICENSE.
+// SPDX-License-Identifier: MIT
 var panel = new Panel;
 panel.location = "bottom";
 panel.height = 52;

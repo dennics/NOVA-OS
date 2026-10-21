@@ -13,5 +13,5 @@ the driver screenshot reports a virtual bochs-drm GPU. Keep those limits visible
 | `updates-0.2.png` | `7adee8f2e0ea1d8caf8f2fb9068f0a22ab3c6872c8a5dcf4c17296a5335cee98` |
 | `drivers-0.2.png` | `bea47cbb4d2fa3a38dcf75f52e367cc5b67dbfb08ae23224da13d8390cce9250` |
 
-NOVA original graphics licensing awaits the same owner decision as original code.
+NOVA original graphics and these application captures are licensed under MIT.
 These screenshots contain no Opera window, third-party game art or personal photo.

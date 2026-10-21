@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "originalWorkspaceRelativePath": "outputs/NOVA-OS",
-  "preparedAtUtc": "2026-10-21T21:03:59.516198+00:00",
+  "preparedAtUtc": "2026-10-21T21:12:20.114270+00:00",
   "note": "Original sources copied; publication documentation/helpers are additive. Hashes describe local bytes before Git EOL normalization, not a rebuilt ISO.",
   "files": [
     {
@@ -43,11 +43,11 @@
       "path": "LICENSE",
       "originalPath": "LICENSE",
       "originalSha256": "f8b17dc7c92ec4a45a6c9bbd2b2a5e3321debf21b7778953a9e31416f2de9dc8",
-      "publicationSha256": "c9aca625d9c29bec765f9752448a668889c2047cf6bc7be3219d254360ac58a1",
-      "unchangedBytes": false
+      "publicationSha256": "f8b17dc7c92ec4a45a6c9bbd2b2a5e3321debf21b7778953a9e31416f2de9dc8",
+      "unchangedBytes": true
     },
     {
-      "path": "LICENSES/MIT-proposed.txt",
+      "path": "LICENSES/MIT.txt",
       "originalPath": "LICENSE",
       "originalSha256": "f8b17dc7c92ec4a45a6c9bbd2b2a5e3321debf21b7778953a9e31416f2de9dc8",
       "publicationSha256": "f8b17dc7c92ec4a45a6c9bbd2b2a5e3321debf21b7778953a9e31416f2de9dc8",
@@ -57,14 +57,14 @@
       "path": "NOTICE.md",
       "originalPath": "NOTICE.md",
       "originalSha256": "325c1a981ebdd3bb3f52bfb898f6670485cf737734a398bb7c780a0e8b283ddd",
-      "publicationSha256": "4bf9274280600a8e8825cc8e90876af3197f06f325d1c8e2e53c3affe152b206",
+      "publicationSha256": "0b5e18b47f8fb57656bc3deec20a579f74f793c8e9ac49126467063a656ccb61",
       "unchangedBytes": false
     },
     {
       "path": "README.md",
       "originalPath": "README.md",
       "originalSha256": "be551809def4ea79e0ff5e34230d819a8a9bec2f54d1a3575ca8b7dbee10f1f0",
-      "publicationSha256": "554d669d159f8783eda48b8c5cc52972e1cdeb3d120eb3d97b6e9739a7d25126",
+      "publicationSha256": "1423027cf8f2e0975f5358a3e6fd0cbfff77619647cdeec3bdfb703be143411e",
       "unchangedBytes": false
     },
     {
@@ -533,15 +533,15 @@
       "path": "system/usr/share/plasma/look-and-feel/org.novaos.desktop/contents/layouts/org.kde.plasma.desktop-layout.js",
       "originalPath": "system/usr/share/plasma/look-and-feel/org.novaos.desktop/contents/layouts/org.kde.plasma.desktop-layout.js",
       "originalSha256": "e305b82b6ac46476fc1155e326b8e5d841651ba06c7a0f1c16180ad0c98fac13",
-      "publicationSha256": "e4b5b8b91d809eb4737388e6aa8919ecaa072e590a1b80c0862be1c43b6af060",
-      "unchangedBytes": false
+      "publicationSha256": "e305b82b6ac46476fc1155e326b8e5d841651ba06c7a0f1c16180ad0c98fac13",
+      "unchangedBytes": true
     },
     {
       "path": "system/usr/share/plasma/look-and-feel/org.novaos.desktop/metadata.json",
       "originalPath": "system/usr/share/plasma/look-and-feel/org.novaos.desktop/metadata.json",
       "originalSha256": "114d68ec8be04f145bf359ce5d74175554dd1cef4ceb7262bdf901e60bfb99b8",
-      "publicationSha256": "64e83977cfd42de5190e9649590fdd0766454ce9ce69bdcbcde1688ba7c2a38c",
-      "unchangedBytes": false
+      "publicationSha256": "114d68ec8be04f145bf359ce5d74175554dd1cef4ceb7262bdf901e60bfb99b8",
+      "unchangedBytes": true
     },
     {
       "path": "system/usr/share/polkit-1/actions/org.novaos.update.policy",
@@ -554,8 +554,8 @@
       "path": "system/usr/share/wallpapers/NovaDark/metadata.json",
       "originalPath": "system/usr/share/wallpapers/NovaDark/metadata.json",
       "originalSha256": "df666149772ec20e954f697c927a6283d9848e8c0c620ac4e3e46d664a3af1c6",
-      "publicationSha256": "6dae927a633914f7e876c77e882bfa7593080a736c62828aa2ba5946e647a948",
-      "unchangedBytes": false
+      "publicationSha256": "df666149772ec20e954f697c927a6283d9848e8c0c620ac4e3e46d664a3af1c6",
+      "unchangedBytes": true
     },
     {
       "path": "tests/backend_test.cpp",

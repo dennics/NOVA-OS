@@ -5,14 +5,14 @@
 The public repository was read and cloned before preparing changes. Its existing
 README-only commit `74f358e9704f48e032b335a88c33e902ab9b5188` is the parent; no
 history was deleted or rewritten. The populated original project had no `.git`
-history. Only this clone's reachable history and the proposed source tree are in
+history. Only this clone's reachable history and the reviewed source tree are in
 publication scope. Unrelated workspace files and unreachable Git objects are not
 being published.
 
 The source inventory maps 105 included files to original project paths/hashes.
-95 are byte-identical before Git newline normalization; ten publication edits
-are documentation/ignore/license status and three provisional theme license
-labels. The C++, QML, C#, installer logic, Containerfiles and build pipeline are
+99 are byte-identical before Git newline normalization; six publication edits
+are documentation and ignore rules. MIT adoption restores the original license
+text and theme labels. The C++, QML, C#, installer logic, Containerfiles and build pipeline are
 authentic and unchanged. New helpers, English documentation and CI/issue guidance
 are clearly additive. The final full file inventory is the prepared Git commit.
 
@@ -60,18 +60,18 @@ tests passed locally, covering secret redaction, forbidden paths, bad-download
 cleanup and refusal to overwrite an unverified input.
 
 CMake reported Kirigami plugin link-target warnings; dynamic UI tests passed.
-The proposed GitHub Actions workflow has read-only permissions, immutable action
+The included GitHub Actions workflow has read-only permissions, immutable action
 commits and complete history checkout. Its commands are tested locally where
-applicable, but **the workflow has not run on GitHub**. It covers source checks
+applicable. At this pre-push review the workflow has not yet run on GitHub. It covers source checks
 and metrics, not the complete Qt/KDE or installer acceptance suite.
 
 ## Licensing and unresolved release risks
 
-MIT is proposed for original work; no final license has been adopted. The root
-pending notice and theme labels make that explicit. Original ownership/branding
-approval remains an owner decision. The RAR fixture's upstream CC0 text/provenance
-is included. Selected exact RPM license expressions are recorded for 21 actual
-packages. No third-party binary payload or proprietary GPU driver is committed.
+The owner approved MIT licensing and source publication on 2026-10-22. The root
+license and theme metadata implement that decision for original NOVA work. The
+RAR fixture's upstream CC0 text/provenance is included. Selected exact RPM license
+expressions are recorded for 21 actual packages. No third-party binary payload or
+proprietary GPU driver is committed.
 
 The Opera EULA does not establish permission for this ISO packaging; proprietary
 image distribution remains held. Media Writer/Qt binary kits require their own
@@ -86,14 +86,13 @@ stable release, recommended ISO or certified hardware list.
 
 ## Approval and push procedure
 
-The prepared source branch is local only. Before public push the owner must
-approve original-source licensing and this source publication. Then finalize the
-approved license/metadata, rerun audits/tests relevant to those edits and inspect
-the final diff. Re-fetch the remote and check ancestry/content changes. Preserve
-any new remote work; stop for conflicts rather than force-pushing. Confirm an
-authorized GitHub write credential exists without exposing its value.
+Owner approval is recorded above. License/metadata finalization is followed by
+fresh source/history scans, relevant tests and final diff review. The remote was
+re-fetched and still pointed to the existing README-only parent at this pre-push
+review. Preserve any subsequent remote work; stop for conflicts rather than
+force-pushing. Use an authorized GitHub credential without exposing its value.
 
 Push only the reviewed source history. Do not upload the defective ISO/kit as a
-recommended release or claim the installer is fixed. Repository private security
-reporting availability and write permissions have not been confirmed by this
-read-only GitHub inspection.
+recommended release or claim the installer is fixed. Private security reporting
+availability is not confirmed. This document records the pre-push audit; actual
+publication must be confirmed against the remote commit after push.

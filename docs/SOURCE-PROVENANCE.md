@@ -11,11 +11,11 @@ are copied from the real project with their relative paths intact. No missing
 application component, bootstrap image or third-party payload was recreated.
 
 `SOURCE-PROVENANCE.json` records included original-file hashes and identifies any
-publication edits. Native implementation files are unchanged. Three theme metadata
-labels were marked pending instead of adopting the local draft MIT label. Additions include
+publication edits. Native implementation files are unchanged. The owner approved
+MIT for original NOVA work on 2026-10-22; theme metadata uses that license. Additions include
 English documentation, publication audit/dependency-fetch helpers and repository
 contribution/issue guidance. Root documentation/ignore rules are revised for safe
-source publication. The local MIT text is retained as an unapproved proposal.
+source publication. The adopted MIT text is retained in `LICENSE` and `LICENSES/MIT.txt`.
 
 The historical wrapper, source lock's local bootstrap IDs and Windows tool's old
 ISO pins remain visible. They document real limitations rather than being replaced

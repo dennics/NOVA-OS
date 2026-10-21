@@ -2,8 +2,7 @@
 
 0.2 is an experimental snapshot with known installer failures. Read `README.md`,
 `docs/BUILD.md`, `docs/ARCHITECTURE.md` and `docs/INSTALLER-ISSUES.md` first.
-The original-source license awaits owner approval; external code contributions
-should wait until that decision is recorded.
+Original NOVA code is licensed under MIT; third-party material keeps its own terms.
 
 For bugs include the commit, build manifest/image hash when relevant, environment,
 exact steps and expected/actual results. Installer reports need Anaconda logs and
@@ -25,6 +24,5 @@ by services/polkit, SELinux enforcing and bootc target validation intact. Wine
 executes untrusted programs as the user; prefixes are not a sandbox.
 
 Keep generated binaries, third-party payloads, caches, VM state and credentials
-out of Git. New assets need origin/license records. After license approval,
-submit contributions with rights to contribute under the adopted terms. No CLA
-is currently established.
+out of Git. New assets need origin/license records. Submit original contributions
+under MIT and only when you have the rights to do so. No CLA is currently established.

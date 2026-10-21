@@ -1,6 +1,6 @@
 # Source and third-party notices
 
-The original NOVA license awaits owner approval. MIT is proposed only.
+Original NOVA code, documentation and graphics are licensed under MIT.
 See [licensing review](docs/LICENSING.md) and the root `LICENSE`.
 
 This source tree does not vendor Fedora/Linux, Qt, KDE, Anaconda, bootc, Wine,

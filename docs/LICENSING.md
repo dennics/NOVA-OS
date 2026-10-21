@@ -1,13 +1,11 @@
-# Licensing review — decision pending
+# Licensing review
 
-## Proposed original-source license
+## Original-source license: MIT
 
-**Recommendation: MIT** for original NOVA C++, QML, C#, scripts, documentation and
-original graphics. The existing local project already contained MIT draft text
-and metadata. Owner approval is explicitly still required; the publication copy's
-root `LICENSE` records that hold. `LICENSES/MIT-proposed.txt` preserves the proposed
-text and does not itself apply it to the repository. Existing attribution is retained;
-three provisional theme labels are marked pending in the publication copy.
+The owner approved MIT licensing and source publication on 2026-10-22. MIT applies
+to original NOVA C++, QML, C#, scripts, documentation and original graphics. The
+adopted text is in root `LICENSE` and `LICENSES/MIT.txt`. Theme metadata is aligned
+with that decision. Third-party material is governed by its own licenses.
 
 MIT permits broad reuse with copyright/license preservation. It can be used for
 original application code that uses appropriately licensed Qt/KDE libraries, but
@@ -16,11 +14,8 @@ proprietary programs. Qt documents its [licensing options](https://doc.qt.io/qt-
 and [LGPL obligations](https://www.qt.io/development/open-source-lgpl-obligations).
 An OS image is an aggregation of separately licensed components, not one MIT work.
 
-If the owner prefers reciprocal licensing of NOVA derivatives, GPL-3.0-or-later
-is an alternative to review before approval. This preparation does not choose
-it or dual-license anything. After approval, replace the pending root notice with
-the adopted text, align metadata and record the decision before public push.
-Confirm ownership/permission for original contributions and branding at that gate.
+This decision does not relicense dependencies, grant rights in third-party marks,
+or authorize proprietary binary redistribution. It is not a dual-license grant.
 
 ## Component review
 
@@ -32,7 +27,7 @@ not a transitive SBOM or a legal-compliance certificate.
 
 | Component | Source-tree treatment | Obligations / unresolved questions |
 | --- | --- | --- |
-| Original NOVA code/assets | Included from original workspace | MIT proposed; owner approval pending |
+| Original NOVA code/assets | Included from original workspace | MIT, owner-approved on 2026-10-22 |
 | Qt 6 and KDE Frameworks/Plasma | Dependency references only; no vendored library code/binaries | Module/package-specific LGPL/GPL licenses and third-party notices; retain replaceability/source rights in future binaries |
 | Fedora/Linux packages | Build/runtime dependencies only | Mixed package licenses, including GPL/LGPL/permissive and firmware terms; generate exact package/SBOM notices for each image |
 | bootc | Original integration wrapper only; upstream binary not vendored | Upstream project and dependency licenses retained; consult the pinned source/Cargo metadata for any binary distribution |
@@ -44,7 +39,7 @@ not a transitive SBOM or a legal-compliance certificate.
 | Opera GX | Build references retained, RPM/EULA HTML excluded | Proprietary; limited EULA permission is not an established grant for NOVA ISO bundling |
 | NVIDIA proprietary software | Not present | No redistribution or driver-support claim |
 | Plymouth theme | NOVA configuration script only | Packaged upstream spinner assets/licenses must remain in generated images |
-| Screenshots | Three reviewed NOVA application captures | Original UI; no personal desktop or third-party artwork included; owner graphics approval remains part of release approval |
+| Screenshots | Three reviewed NOVA application captures | Original UI, MIT; no personal desktop or third-party artwork included |
 
 The [Opera EULA](https://www.opera.com/legal/eula-computers), section 2, permits
 limited distribution through desktop open-source distribution application

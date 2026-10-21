@@ -11,9 +11,9 @@ No fix or successful end-to-end 0.2 installation is claimed here. This source
 commit distributes no ISO, VM image or executable.
 
 These are the [original NOVA sources](docs/SOURCE-PROVENANCE.md), including the
-defective installer wrapper. Original-source licensing awaits owner approval:
-MIT is proposed, not adopted. See [LICENSE](LICENSE) and
-[licensing review](docs/LICENSING.md). Public push also awaits approval.
+defective installer wrapper. Original NOVA code, documentation and graphics are
+available under the MIT license. Third-party components retain their own terms;
+see [LICENSE](LICENSE), [NOTICE.md](NOTICE.md) and [licensing review](docs/LICENSING.md).
 
 ## What exists in 0.2
 

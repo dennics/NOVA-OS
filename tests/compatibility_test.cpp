@@ -1,8 +1,12 @@
 #include "CompatInspector.hpp"
+#include "CompatController.hpp"
 
 #include <QFile>
+#include <QFileInfo>
+#include <QProcessEnvironment>
 #include <QTemporaryDir>
 #include <QtTest>
+#include <unistd.h>
 
 namespace {
 void put16(QByteArray &bytes, int offset, quint16 value)
@@ -158,7 +162,34 @@ private slots:
         QVERIFY(report.validPe);
         QVERIFY(report.nativeName.isEmpty());
     }
+
+    void wineLaunchFailureIsVisible()
+    {
+        if (geteuid() == 0) QSKIP("Wine launch UI test must run as an unprivileged user.");
+        QTemporaryDir temporary;
+        QVERIFY(temporary.isValid());
+        const QString exe = writeFixture(temporary.path(), QStringLiteral("program.exe"), peFixture(0x8664));
+        const QString fakeWine = temporary.path() + QStringLiteral("/wine");
+        QFile launcher(fakeWine);
+        QVERIFY(launcher.open(QIODevice::WriteOnly));
+        const QByteArray script = "#!/bin/sh\nprintf 'NOVA_FAKE_WINE_START\\n'\nprintf 'synthetic Wine failure\\n' >&2\nexit 7\n";
+        QCOMPARE(launcher.write(script), qint64(script.size()));
+        launcher.close();
+        QVERIFY(launcher.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner));
+
+        const QByteArray oldPath = qgetenv("PATH");
+        qputenv("PATH", temporary.path().toLocal8Bit());
+        CompatController controller(inspectExecutable(exe, true));
+        controller.setIsolatedPrefix(false);
+        QVERIFY(controller.canAttempt());
+        controller.launchWithWine();
+        QTRY_COMPARE_WITH_TIMEOUT(controller.launchStatus(), QStringLiteral("failed"), 5000);
+        QVERIFY(controller.launchMessage().contains(QStringLiteral("exited with code 7")));
+        QVERIFY(controller.launchMessage().contains(QStringLiteral("synthetic Wine failure")));
+        QVERIFY(QFileInfo::exists(controller.launchLogPath()));
+        qputenv("PATH", oldPath);
+    }
 };
 
-QTEST_APPLESS_MAIN(CompatibilityTest)
+QTEST_GUILESS_MAIN(CompatibilityTest)
 #include "compatibility_test.moc"

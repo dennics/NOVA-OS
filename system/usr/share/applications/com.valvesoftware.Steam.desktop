@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Steam
+Name[ro]=Steam
+Comment=Install or launch Steam from Flathub
+Comment[ro]=Instalează sau pornește Steam din Flathub
+Exec=nova-launch-store-app com.valvesoftware.Steam %U
+Icon=applications-games
+Terminal=false
+Categories=Game;
+StartupNotify=true

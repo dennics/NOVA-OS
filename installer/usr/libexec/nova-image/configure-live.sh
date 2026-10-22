@@ -46,9 +46,10 @@ config.set_from_files()
 assert config.storage.default_scheme == AUTOPART_TYPE_PLAIN
 assert config.storage.file_system_type == 'ext4'
 requests = config.storage.default_partitioning
-assert len(requests) == 1 and requests[0]['name'] == '/'
-assert int(requests[0]['min']) >= 8 * 1024**3 and 'max' not in requests[0]
+requests = {request['name']: request for request in requests}
+assert set(requests) == {'/'}
+assert int(requests['/']['min']) >= 8 * 1024**3 and 'max' not in requests['/']
 assert config.get_parser().get('User Interface', 'webui_web_engine') == 'slitherer'
-print('NOVA installer profile validated: plain ext4 root, platform boot partitions, WebUI browser')
+print('NOVA installer profile validated: plain ext4 root, temporary disk-backed import staging, platform boot partitions, WebUI browser')
 PY
 

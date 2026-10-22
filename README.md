@@ -7,13 +7,41 @@ C++ / Qt 6 / QML / Kirigami Control Center. No online NOVA account is required.
 **0.2 Preview has known installation failures. It is a development snapshot,
 not a stable release or a recommended installation on a personal computer.**
 Read the [installer issues](docs/INSTALLER-ISSUES.md) before image experiments.
-No fix or successful end-to-end 0.2 installation is claimed here. This source
-commit distributes no ISO, VM image or executable.
+The 0.2.1 branch includes a targeted staging correction, but no successful
+end-to-end 0.2.1 installation is claimed here. This source commit distributes
+no ISO, VM image or executable.
 
 These are the [original NOVA sources](docs/SOURCE-PROVENANCE.md), including the
 defective installer wrapper. Original NOVA code, documentation and graphics are
 available under the MIT license. Third-party components retain their own terms;
 see [LICENSE](LICENSE), [NOTICE.md](NOTICE.md) and [licensing review](docs/LICENSING.md).
+
+## 0.2.1 Preview update
+
+The 0.2.1 Preview branch improves Wine launch diagnostics, configures signed
+Flathub metadata for Discover, and adds NOVA launchers for Steam and Opera GX.
+Those launchers open the application's Discover page when it is not installed;
+the proprietary application binaries are not embedded in the NOVA image. Wine
+does not guarantee that a Windows application or game will work.
+
+This branch configures the image update target as
+`ghcr.io/dennics/nova-os:0.2.1-preview`. Existing 0.2.0 installations still
+point at `nova.invalid` and need this one-time source migration after the
+public image is available:
+
+```sh
+pkexec bootc switch ghcr.io/dennics/nova-os:0.2.1-preview
+```
+
+Restart after bootc stages the image. Later registry updates are handled from
+NOVA Settings. See [UPDATE-0.2.1.md](docs/UPDATE-0.2.1.md) for the procedure
+and its validation limits.
+
+The installer wrapper now stages image import in a separate, disk-backed
+temporary filesystem and checks available space before deployment. This is a
+targeted correction for the reported root-directory and temporary-storage
+failures; a successful offline installation from the rebuilt ISO remains a
+required acceptance test and is not claimed by this source change.
 
 ## What exists in 0.2
 
@@ -21,12 +49,12 @@ see [LICENSE](LICENSE), [NOTICE.md](NOTICE.md) and [licensing review](docs/LICEN
 | --- | --- | --- |
 | Control Center | Native UI, system information, CPU/RAM sampling, KConfig preferences, first-login welcome, Romanian/English UI | Desktop/hardware behavior needs testing beyond unit tests |
 | NOVA Dark | Plasma look-and-feel, colors, bottom panel, original SVG wallpaper/mark and motion preferences | Plasma provides desktop infrastructure; GPU effects vary |
-| Smart Compatibility | Local PE inspection, architecture checks, limited native-app hints, explicit Wine launch, shared/per-app prefixes, Dolphin integration | Hints use untrusted metadata; Wine is not a sandbox and execution is not guaranteed |
-| Update Center | bootc status and fixed helper operations through polkit | No public NOVA registry; placeholder sources disable online actions; full 0.2 update/rollback is unvalidated |
+| Smart Compatibility | Local PE inspection, architecture checks, limited native-app hints, explicit Wine launch with process results and per-launch logs, shared/per-app prefixes, Dolphin integration | Hints use untrusted metadata; Wine is not a sandbox and execution is not guaranteed |
+| Update Center | bootc status and fixed helper operations through polkit; the 0.2.1 image targets the NOVA GHCR registry | Existing 0.2.0 systems still need a one-time source switch; update and rollback remain unvalidated on the HP laptop |
 | Performance Profiles | Eco/Balanced/Gaming request power-saver/balanced/performance over D-Bus | Requires service/hardware support; GameMode is used by explicitly launched games; no FPS claims |
 | Driver Center | PCI GPU/vendor and active Linux driver detection with guidance | No proprietary NVIDIA driver installer |
-| Installer | Anaconda Live/WebUI configuration, offline payload integration, explicit disk selection | Known staging defects prevent reliable installation |
-| Browser/archives | Local preview configured Opera GX; Wine, Ark, unar and 7zip integration | Opera binaries are proprietary and excluded; ZIP/RAR/7z extraction needs no WinRAR; RAR creation is absent |
+| Installer | Anaconda Live/WebUI configuration, offline payload integration, explicit disk selection; 0.2.1 adds isolated, space-checked image staging | The corrected path still needs a full offline installation test from the rebuilt ISO |
+| Applications/archives | Opera GX and Steam launchers open Discover pages; Ark, unar and 7zip handle ZIP/RAR/7z | Browser/game binaries are installed separately; Wine cannot run every Windows app; RAR creation is absent |
 | Windows USB tool | Original C# frontend and build script | Pins the historical defective ISO; binaries and Fedora writer payload excluded; not a recommended kit |
 
 ## Real application screenshots

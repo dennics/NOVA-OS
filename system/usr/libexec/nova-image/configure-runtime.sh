@@ -1,37 +1,41 @@
 #!/usr/bin/bash
 set -euo pipefail
+trap 'status=$?; printf "NOVA runtime configuration failed near line %s (exit %s)\\n" "$LINENO" "$status" >&2; exit "$status"' ERR
 version=${1:?NOVA version required}
 install -d /var/roothome
-opera_rpm=/tmp/nova-opera-gx.rpm
-opera_sha256=b911fb526d872e59ca8a3bf92e6e77fcf16a42a042b53f23f5abf97f74ebfd52
-printf '%s  %s\n' "$opera_sha256" "$opera_rpm" | sha256sum --check --status
-test "$(rpm -qp --qf '%{NAME} %{VERSION} %{ARCH}' "$opera_rpm")" = 'opera-gx-stable 137.0.6036.65 x86_64'
+opera_launcher=/usr/share/nova/opera-gx.desktop
+install -d /usr/share/nova
+install -m 0644 /usr/share/applications/opera-gx.desktop "$opera_launcher"
+flathub_repo=/usr/share/flatpak/remotes.d/flathub.flatpakrepo
+flathub_sha256=3371dd250e61d9e1633630073fefda153cd4426f72f4afa0c3373ae2e8fea03a
+printf '%s  %s\n' "$flathub_sha256" "$flathub_repo" | sha256sum --check --status
+grep -Fxq 'Url=https://dl.flathub.org/repo/' "$flathub_repo"
+grep -q '^GPGKey=.' "$flathub_repo"
 missing=()
-for package in firewalld qemu-guest-agent glibc-langpack-ro kf6-kirigami kf6-kiconthemes wine ark unar 7zip pciutils gamemode tuned-ppd; do
+for package in firewalld qemu-guest-agent glibc-langpack-ro kf6-kirigami kf6-kiconthemes wine ark unar 7zip pciutils gamemode steam-devices tuned-ppd; do
     rpm -q --quiet "$package" || missing+=("$package")
 done
 if ((${#missing[@]})); then
     dnf -y --setopt=install_weak_deps=False --setopt=keepcache=True install "${missing[@]}"
 fi
-if ! rpm -q --quiet opera-gx-stable; then
-    dnf -y --disablerepo='*' install "$opera_rpm"
+# Remove the upstream RPM-repository setup that may be inherited from NOVA 0.1.
+if command -v atq >/dev/null && command -v at >/dev/null; then
+    while read -r job _; do
+        if [[ -n "$job" ]] && at -c "$job" 2>/dev/null | grep -Fq '/usr/lib64/opera-gx-stable/setup_repo.sh'; then
+            atrm "$job"
+        fi
+    done < <(atq)
 fi
-# Opera schedules its own RPM repository setup through atd. NOVA image updates
-# remain image-managed, so remove only that queued job and disable the timer.
-while read -r job _; do
-    if [[ -n "$job" ]] && at -c "$job" 2>/dev/null | grep -Fq '/usr/lib64/opera-gx-stable/setup_repo.sh'; then
-        atrm "$job"
-    fi
-done < <(atq)
+if rpm -q --quiet opera-gx-stable; then
+    dnf -y --setopt=clean_requirements_on_remove=False remove opera-gx-stable
+fi
 systemctl disable atd.service 2>/dev/null || true
 rm -f /etc/yum.repos.d/opera*.repo
-if rpm -q --quiet firefox; then dnf -y remove firefox; fi
-rm -f "$opera_rpm"
-test -x /usr/bin/opera-gx
+install -m 0644 "$opera_launcher" /usr/share/applications/opera-gx.desktop
 test -x /usr/bin/wine
 test -x /usr/bin/unar
 # Every default panel launcher must resolve to an installed application.
-for desktop in org.novaos.ControlCenter org.kde.dolphin opera-gx org.kde.ark org.kde.discover nova-wine; do
+for desktop in org.novaos.ControlCenter org.kde.dolphin opera-gx com.valvesoftware.Steam org.kde.ark org.kde.discover nova-wine; do
     test -f "/usr/share/applications/$desktop.desktop"
 done
 sed -i -e 's/^NAME=.*/NAME="NOVA OS"/' \
@@ -55,6 +59,7 @@ if test -f /usr/lib/plasmalogin/defaults.conf; then
     done
 fi
 systemctl enable firewalld.service
+systemctl enable nova-flathub-setup.service
 # Anaconda creates the local account; NOVA owns the first-login welcome.
 # KDE's documented completion flag prevents its separate setup autologin.
 install -m 0644 /dev/null /etc/plasma-setup-done

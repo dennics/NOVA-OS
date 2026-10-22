@@ -26,53 +26,30 @@ QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software build/native/nova-control-ce
 validate system services or installation. `NOVA_BUILD_DESKTOP=OFF` allows building
 the metrics parser/test independently of Qt/KDE.
 
-## Historical image pipeline — required inputs are not all public
+## 0.2.1 Preview image pipeline
 
-Use a dedicated Fedora 44 VM (4 CPUs, 8 GiB RAM planned, 100 GB development disk
-plus sufficient free storage for intermediates). The bootstrap configures Podman
-storage and requires a VM; do not run it on a general-purpose host.
+Use a dedicated Fedora 44 VM (4 CPUs, 8 GiB RAM planned, 100 GB development
+disk plus sufficient free storage for intermediates). The bootstrap configures
+Podman storage; do not run it on a general-purpose host.
 
 ```sh
 sudo bash scripts/bootstrap-builder.sh
-sudo bash scripts/build.sh iso
+sudo bash scripts/build.sh runtime
 ```
 
-Other stages: `runtime` and `live`. The runtime and Live images are separate;
-Image Builder's `bootc-generic-iso` embeds the runtime for offline deployment.
-`scripts/osbuild` validates/transforms the tools pipeline and applies SELinux
-labels before compression. The manifest and package list go into `artifacts/`.
+The runtime and Live images are separate. The runtime OCI image was rebuilt
+from the digest-pinned Fedora Kinoite 44 base in sources.lock.json; it no
+longer depends on unpublished NOVA 0.1 bootstrap images or includes proprietary
+Opera/Steam application binaries. The signed Flathub remote lets the user choose
+those apps through Discover.
 
-The pipeline above is retained from the original project. It requires:
-
-| Input | Identity/location | Availability |
-| --- | --- | --- |
-| Fedora Kinoite 44 base | Digest in `sources.lock.json` | Upstream registry; availability must be checked by builder |
-| Image Builder | Digest in the same lock | Upstream registry; requires network/cached input |
-| NOVA 0.1 runtime/Live bootstrap | Exact local image IDs in that lock | Only in the original builder; not published with this tree |
-| Opera GX RPM | `vendor/opera-gx-stable_137.0.6036.65_amd64.rpm` | Excluded proprietary input; version/hash in `docs/DEPENDENCIES.md` |
-| Opera EULA HTML | `vendor/opera-eula-computers.html` | Separately acquire from the official EULA page; not fabricated |
-| Fedora RPM dependencies | Live repositories/caches used by configuration scripts | Not snapshot-pinned; versions recorded after build |
-
-**A clean checkout does not reproduce the historical ISO.** Copying an unrelated
-image under a bootstrap tag is refused by ID validation and is not a solution.
-Do not create dummy vendor files to pass COPY/checksum checks.
-
-For authorized local development, retrieve exact Opera inputs with the additive
-`scripts/fetch-dependency.py` helper only after reviewing its EULA. Dependency
-retrieval does not grant ISO redistribution permission. No proprietary payload
-is fetched by cloning the repository or by the source audit.
-
-The clean-host follow-up is to build directly from the pinned Fedora base with
-all NOVA configuration stages, rather than unpublished bootstrap images, then
-validate the result. `scripts/build.sh` already falls back to the Fedora base
-when bootstrap fields are absent, but that path has **not** been qualified for
-this snapshot. Do not remove pins and claim that the historical image was reproduced.
-RPM repository snapshots and all inputs/tool versions are also needed for a
-bit-reproducible image. The current process records provenance, not identical bytes.
-
-The known installer failures remain even if image construction succeeds.
-Follow `VM.md`, `INSTALLER-ISSUES.md` and `ACCEPTANCE.md` before any binary release.
-
+The build needs network access to fetch pinned OCI inputs and Fedora packages.
+The base and Image Builder inputs are digest-pinned, but Fedora RPM repositories
+are not snapshot-pinned, so byte-identical output is not promised. artifacts/
+records image and package provenance. The 0.2.1 runtime build and native checks
+have evidence in VALIDATION.md. The full iso build and offline installation
+from the resulting ISO have not passed acceptance for this update; do not treat
+successful runtime image construction as an installer test.
 ## Windows Media Creation Tool
 
 Source is in `tools/nova-media-creator/`. The original build requires Windows,

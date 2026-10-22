@@ -1,24 +1,235 @@
 #!/usr/bin/bash
 set -euo pipefail
 
-# Anaconda invokes `bootc install to-filesystem` after it mounts the selected
-# destination. The container import needs more scratch space than the Live
-# session's RAM-backed overlay, so keep its temporary files on that destination.
-if [[ $# -ge 3 && $1 == install && $2 == to-filesystem ]]; then
-    target=${!#}
-    [[ $target == /mnt/sysimage ]] || { echo 'Unexpected NOVA install target.' >&2; exit 64; }
-    resolved=$(readlink -f -- "$target")
-    [[ $resolved == /var/mnt/sysimage ]] || { echo 'NOVA install target is not mounted as expected.' >&2; exit 64; }
-    source=$(findmnt -n -o SOURCE --target "$resolved")
-    [[ $source == /dev/* ]] || { echo 'NOVA install target must be a selected disk filesystem.' >&2; exit 64; }
-    install -d -m 1777 "$resolved/var/tmp"
-    scratch=$(mktemp -d "$resolved/var/tmp/nova-bootc.XXXXXXXX")
-    [[ $scratch == "$resolved"/var/tmp/nova-bootc.* && -d $scratch ]] || exit 64
-    cleanup() { rm -rf -- "$scratch"; }
-    trap cleanup EXIT
-    export TMPDIR=$scratch
-    /usr/libexec/nova-bootc-real "$@"
-    exit $?
+real_bootc=/usr/libexec/nova-bootc-real
+
+# Preserve the unmodified bootc CLI for every command except the Anaconda
+# deployment path handled below.
+if [[ $# -lt 3 || $1 != install || $2 != to-filesystem ]]; then
+    exec "$real_bootc" "$@"
 fi
 
-exec /usr/libexec/nova-bootc-real "$@"
+target=${!#}
+[[ $target == /mnt/sysimage ]] || {
+    echo 'NOVA installer: unexpected bootc target.' >&2
+    exit 64
+}
+resolved=$(readlink -f -- "$target")
+[[ $resolved == /var/mnt/sysimage ]] || {
+    echo 'NOVA installer: target is not mounted as expected.' >&2
+    exit 64
+}
+
+read -r root_source root_device < <(findmnt -n -o SOURCE,MAJ:MIN --target "$resolved")
+[[ $root_source == /dev/* && -n $root_device ]] || {
+    echo 'NOVA installer: the selected root must be a local disk filesystem.' >&2
+    exit 64
+}
+
+# Anaconda's bootc payload accepts only its standard mount points and cleans
+# the selected root before invoking this wrapper. Refuse to touch a non-empty
+# root, including anything other than the mounted /boot directory.
+unexpected=$(find "$resolved" -mindepth 1 -maxdepth 1 ! -path "$resolved/boot" -print -quit)
+[[ -z $unexpected && -d "$resolved/boot" ]] || {
+    echo 'NOVA installer: bootc target is not clean; refusing to create staging data.' >&2
+    exit 64
+}
+mountpoint -q "$resolved/boot" || {
+    echo 'NOVA installer: the selected /boot filesystem is not mounted.' >&2
+    exit 64
+}
+
+if mountpoint -q /var/tmp; then
+    echo 'NOVA installer: /var/tmp is already a mount point; refusing to cover it.' >&2
+    exit 64
+fi
+live_boot_id=$(tr -d '-' </proc/sys/kernel/random/boot_id)
+private_prefix="systemd-private-${live_boot_id}-"
+tmp_unexpected=$(find /var/tmp -mindepth 1 -maxdepth 1 ! -name "${private_prefix}*" -print -quit)
+[[ -z $tmp_unexpected ]] || {
+    echo 'NOVA installer: installer /var/tmp contains data outside this boot’s systemd-private directories; refusing to cover it.' >&2
+    exit 64
+}
+while IFS= read -r -d '' private_dir; do
+    [[ -d $private_dir && ! -L $private_dir && $(stat -c %u -- "$private_dir") == 0 && $(stat -c %a -- "$private_dir") == 700 ]] || {
+        echo 'NOVA installer: /var/tmp contains an unexpected systemd-private entry; refusing to cover it.' >&2
+        exit 64
+    }
+done < <(find /var/tmp -mindepth 1 -maxdepth 1 -name "${private_prefix}*" -print0)
+tmp_device_before=$(stat -c %d -- /var/tmp)
+selinuxenabled || {
+    echo 'NOVA installer: SELinux policy is not loaded; refusing bootc deployment.' >&2
+    exit 64
+}
+
+source_ref=''
+for argument in "$@"; do
+    if [[ $argument == --source-imgref=containers-storage:* ]]; then
+        source_ref=${argument#--source-imgref=containers-storage:}
+    fi
+done
+[[ -n $source_ref ]] || {
+    echo 'NOVA installer: the local NOVA image reference is missing.' >&2
+    exit 64
+}
+image_bytes=$(podman image inspect --format '{{.Size}}' "$source_ref") || {
+    echo 'NOVA installer: could not inspect the bundled NOVA image size.' >&2
+    exit 1
+}
+[[ $image_bytes =~ ^[0-9]+$ && $image_bytes -gt 0 ]] || {
+    echo 'NOVA installer: the bundled NOVA image reported an invalid size.' >&2
+    exit 1
+}
+
+# bootc puts imported container image data under /var/tmp; TMPDIR alone does
+# not redirect that storage. Reserve a disk-backed ext4 filesystem as an
+# unlinked loop image on the already-selected root filesystem. The loop mount
+# lives at the installer host's /var/tmp, while the target root has no staging
+# directory when bootc performs its root safety checks.
+stage_bytes=$((image_bytes + 3 * 1024 * 1024 * 1024))
+root_required=$((2 * image_bytes + 8 * 1024 * 1024 * 1024))
+root_available=$(df --output=avail -B1 -- "$resolved" | tail -n 1 | tr -d '[:space:]')
+# GNU df rejects --inodes together with --output. The iavail field already
+# selects the inode count, so keep the two modes separate.
+root_inodes=$(df --output=iavail -- "$resolved" | tail -n 1 | tr -d '[:space:]')
+[[ $root_available =~ ^[0-9]+$ && $root_inodes =~ ^[0-9]+$ ]] || {
+    echo 'NOVA installer: could not verify free space on the selected root filesystem.' >&2
+    exit 1
+}
+(( root_available >= root_required )) || {
+    echo 'NOVA installer: the selected root needs at least twice the bundled image size plus 8 GiB free for safe installation staging.' >&2
+    exit 1
+}
+(( root_inodes >= 8192 )) || {
+    echo 'NOVA installer: the selected root has too few free inodes for image import.' >&2
+    exit 1
+}
+
+stage_file=''
+loop_device=''
+stage_mounted=false
+release_staging() {
+    if [[ $stage_mounted == true ]]; then
+        if umount /var/tmp; then
+            stage_mounted=false
+        else
+            echo 'NOVA installer: could not unmount temporary image-import staging.' >&2
+            return 1
+        fi
+    fi
+    if [[ -n $loop_device ]]; then
+        if losetup -d "$loop_device"; then
+            loop_device=''
+        else
+            echo 'NOVA installer: could not detach temporary image-import staging.' >&2
+            return 1
+        fi
+    fi
+    if [[ -n $stage_file && -e $stage_file ]]; then
+        if rm -f -- "$stage_file"; then
+            stage_file=''
+        else
+            echo 'NOVA installer: could not remove temporary image-import staging file.' >&2
+            return 1
+        fi
+    fi
+    [[ $(stat -c %d -- /var/tmp) == "$tmp_device_before" ]] || {
+        echo 'NOVA installer: installer /var/tmp was not restored after staging.' >&2
+        return 1
+    }
+}
+cleanup() {
+    status=$?
+    trap - EXIT
+    set +e
+    if release_staging; then
+        :
+    else
+        cleanup_status=$?
+        if (( status == 0 )); then
+            status=$cleanup_status
+        fi
+        echo 'NOVA installer: could not cleanly release temporary image-import staging.' >&2
+    fi
+    exit "$status"
+}
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+stage_file=$(mktemp "$resolved/.nova-bootc-stage.XXXXXXXX")
+[[ $(stat -c %d -- "$stage_file") == $(stat -c %d -- "$resolved") ]] || {
+    echo 'NOVA installer: staging image is not on the selected root filesystem.' >&2
+    exit 1
+}
+fallocate -l "$stage_bytes" "$stage_file" || {
+    echo 'NOVA installer: insufficient contiguous space for image-import staging.' >&2
+    exit 1
+}
+loop_device=$(losetup --find --show --nooverlap "$stage_file") || {
+    echo 'NOVA installer: could not create the temporary disk-backed staging device.' >&2
+    exit 1
+}
+mkfs.ext4 -F -m 0 -L NOVA_BOOTC_STAGE "$loop_device" >/dev/null
+mount "$loop_device" /var/tmp
+stage_mounted=true
+chmod 1777 /var/tmp
+restorecon -RF /var/tmp
+
+stage_available=$(df --output=avail -B1 -- /var/tmp | tail -n 1 | tr -d '[:space:]')
+stage_inodes=$(df --output=iavail -- /var/tmp | tail -n 1 | tr -d '[:space:]')
+[[ $stage_available =~ ^[0-9]+$ && $stage_inodes =~ ^[0-9]+$ ]] || {
+    echo 'NOVA installer: could not verify the temporary staging filesystem.' >&2
+    exit 1
+}
+(( stage_available >= image_bytes + 2 * 1024 * 1024 * 1024 && stage_inodes >= 8192 )) || {
+    echo 'NOVA installer: the temporary staging filesystem is too small for the bundled image.' >&2
+    exit 1
+}
+
+# The loop device retains its backing inode after unlink. This removes the only
+# non-mount entry from the target root before bootc validates it.
+rm -f -- "$stage_file"
+stage_file=''
+unexpected=$(find "$resolved" -mindepth 1 -maxdepth 1 ! -path "$resolved/boot" -print -quit)
+[[ -z $unexpected ]] || {
+    echo 'NOVA installer: staging cleanup left data in the bootc target root.' >&2
+    exit 1
+}
+
+echo "NOVA installer: disk-backed staging ready; SELinux is $(getenforce)."
+install_args=("$@" --skip-finalize)
+if env TMPDIR=/tmp "$real_bootc" "${install_args[@]}"; then
+    :
+else
+    status=$?
+    echo 'NOVA installer: bootc could not deploy the image. Review the installer log for the filesystem or image-import error.' >&2
+    exit "$status"
+fi
+
+# bootc's standard filesystem finalization remounts the target read-only while
+# it trims and freezes the filesystems. The temporary loop filesystem is backed
+# by an unlinked file on that same target, so release it first; then perform the
+# same bootc finalization steps without leaving a loop mount active on the root.
+release_staging || exit 1
+for filesystem in root boot; do
+    if [[ $filesystem == root ]]; then
+        filesystem_path=$resolved
+    else
+        filesystem_path=$resolved/boot
+    fi
+    mountpoint -q "$filesystem_path" || {
+        echo "NOVA installer: the selected $filesystem filesystem is no longer mounted; refusing to finalize." >&2
+        exit 1
+    }
+    echo "NOVA installer: trimming $filesystem filesystem."
+    fstrim --quiet-unsupported -v "$filesystem_path" || exit $?
+    echo "NOVA installer: finalizing $filesystem filesystem."
+    mount -o remount,ro "$filesystem_path" || exit $?
+    filesystem_type=$(findmnt -n -o FSTYPE --target "$filesystem_path")
+    if [[ $filesystem_type != vfat && $filesystem_type != msdos ]]; then
+        fsfreeze -f "$filesystem_path" || exit $?
+        fsfreeze -u "$filesystem_path" || exit $?
+    fi
+done
+exit 0

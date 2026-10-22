@@ -1,0 +1,15 @@
+[Unit]
+Description=Configure the signed Flathub application source for NOVA
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/nova-configure-flathub
+RemainAfterExit=yes
+Restart=on-failure
+RestartSec=5min
+TimeoutStartSec=45s
+
+[Install]
+WantedBy=multi-user.target

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.1 Preview — compatibility and update repair
+
+- Wine launches report process-start failures, exit status and a per-launch log.
+- Flathub is configured with signed repository metadata for Discover.
+- NOVA Steam and Opera GX launchers open their Discover pages when those
+  applications are absent; proprietary binaries are not bundled.
+- Fedora `steam-devices` controller rules are included.
+- The installer wrapper uses space-checked, disk-backed temporary staging to
+  avoid leaving scratch directories in the bootc target root. Full offline
+  installation validation is still required.
+- The image update target is prepared at
+  `ghcr.io/dennics/nova-os:0.2.1-preview`; installed 0.2.0 systems need a
+  one-time source migration before Settings can use the registry.
+
 ## 0.2 Preview — source publication, 2026-10-22
 
 Source snapshot only; no stable or recommended binary release.

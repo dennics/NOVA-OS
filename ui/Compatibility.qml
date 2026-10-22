@@ -28,8 +28,10 @@ ApplicationWindow {
         return tr("Wine can try to start this program. Compatibility is unverified.", "Wine poate încerca să pornească acest program. Compatibilitatea nu este verificată.")
     }
     function launchText() {
-        if (Compatibility.launchStatus === "started") return tr("Wine started. Whether this program works is still unknown.", "Wine a pornit. Nu știm încă dacă programul funcționează.")
-        if (Compatibility.launchStatus === "failed") return tr("Wine could not be started.", "Wine nu a putut fi pornit.")
+        if (Compatibility.launchStatus === "starting") return tr("Starting Wine…", "Se pornește Wine…")
+        if (Compatibility.launchStatus === "running") return tr("Wine started the process. The program may still be incompatible.", "Wine a pornit procesul. Programul poate fi incompatibil.")
+        if (Compatibility.launchStatus === "finished") return root.tr("Wine has exited. Check its log for details.", "Wine s-a închis. Verifică jurnalul pentru detalii.")
+        if (Compatibility.launchStatus === "failed") return tr("Wine could not run this program. Details are shown below.", "Wine nu a putut rula programul. Detaliile sunt mai jos.")
         if (Compatibility.launchStatus === "unavailable") return tr("The file or Wine is no longer available.", "Fișierul sau Wine nu mai este disponibil.")
         return ""
     }
@@ -245,9 +247,27 @@ ApplicationWindow {
             Layout.fillWidth: true
             visible: Compatibility.launchStatus.length > 0
             text: root.launchText()
-            color: Compatibility.launchStatus === "started" ? root.blue : "#ff8f91"
+            color: Compatibility.launchStatus === "running" ? root.blue : "#ff8f91"
             font.pixelSize: 12
             wrapMode: Text.WordWrap
+        }
+        Text {
+            Layout.fillWidth: true
+            visible: Compatibility.launchMessage.length > 0
+            text: Compatibility.launchMessage
+            color: root.muted
+            font.pixelSize: 11
+            wrapMode: Text.WrapAnywhere
+            selectByMouse: true
+        }
+        Text {
+            Layout.fillWidth: true
+            visible: Compatibility.launchLogPath.length > 0
+            text: root.tr("Wine log: " + Compatibility.launchLogPath, "Jurnal Wine: " + Compatibility.launchLogPath)
+            color: root.muted
+            font.pixelSize: 11
+            wrapMode: Text.WrapAnywhere
+            selectByMouse: true
         }
         RowLayout {
             Layout.fillWidth: true
@@ -265,8 +285,11 @@ ApplicationWindow {
                 onClicked: Compatibility.openNativePage()
             }
             Button {
-                text: root.tr("Run with Wine", "Rulează cu Wine")
-                enabled: Compatibility.canAttempt && Compatibility.launchStatus.length === 0
+                text: Compatibility.launchStatus === "failed" || Compatibility.launchStatus === "finished"
+                    ? root.tr("Try again", "Încearcă din nou")
+                    : root.tr("Run with Wine", "Rulează cu Wine")
+                enabled: Compatibility.canAttempt && Compatibility.launchStatus !== "starting"
+                    && Compatibility.launchStatus !== "running"
                 onClicked: Compatibility.launchWithWine()
                 contentItem: Text {
                     text: parent.text

@@ -3,6 +3,8 @@
 #include "CompatInspector.hpp"
 #include <QObject>
 
+class QProcess;
+
 class CompatController : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString fileName READ fileName CONSTANT)
@@ -18,6 +20,8 @@ class CompatController : public QObject {
     Q_PROPERTY(bool canAttempt READ canAttempt CONSTANT)
     Q_PROPERTY(bool romanian READ romanian CONSTANT)
     Q_PROPERTY(QString launchStatus READ launchStatus NOTIFY launchStatusChanged)
+    Q_PROPERTY(QString launchMessage READ launchMessage NOTIFY launchStatusChanged)
+    Q_PROPERTY(QString launchLogPath READ launchLogPath NOTIFY launchStatusChanged)
     Q_PROPERTY(bool isolatedPrefix READ isolatedPrefix WRITE setIsolatedPrefix NOTIFY isolatedPrefixChanged)
 
 public:
@@ -35,6 +39,8 @@ public:
     bool canAttempt() const;
     bool romanian() const;
     QString launchStatus() const { return m_launchStatus; }
+    QString launchMessage() const { return m_launchMessage; }
+    QString launchLogPath() const { return m_launchLogPath; }
     bool isolatedPrefix() const { return m_isolatedPrefix; }
     void setIsolatedPrefix(bool value) { if (m_isolatedPrefix != value) { m_isolatedPrefix = value; emit isolatedPrefixChanged(); } }
 
@@ -48,6 +54,9 @@ signals:
 private:
     CompatReport m_report;
     QString m_launchStatus;
+    QString m_launchMessage;
+    QString m_launchLogPath;
+    QProcess *m_wineProcess = nullptr;
     bool m_isolatedPrefix = true;
 };
 

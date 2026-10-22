@@ -1,29 +1,26 @@
 # Validation status
 
-This publication preparation is a source snapshot. No stable release or working
-0.2 installer is claimed.
+NOVA OS 0.2.1 is an experimental Preview. The runtime image was built and
+tested in a dedicated Fedora 44 VM. This does not certify the HP laptop or a
+full offline ISO installation.
 
 | Check | Evidence/status |
 | --- | --- |
-| Original source present | C++, QML, C#, themes, installer/configuration and build scripts copied from the development project; `SOURCE-PROVENANCE.md` |
-| Historical native suite | Four CTest entries passed on Fedora 44, 2026-10-21; original log in `evidence/native-tests-2026-10-21.log` |
-| Fresh native compilation | Publication C++/QML/asset/test copy compiled in a new Fedora VM directory, then 4/4 CTest entries passed; `evidence/native-publication-clean-build.log` |
-| CPU parser | Interval/guest accounting, reset, memory-cache and malformed-source cases in `tests/metrics_test.cpp` |
-| Compatibility parser | Invalid/truncated PE, architecture and metadata-hint cases in `tests/compatibility_test.cpp` |
-| Backend/UI | Persistence, unavailable metrics, monitor lifecycle, reduced effects and keyboard/page lifecycle cases |
-| Real screenshots | Three native-application captures, reviewed for personal desktop content; no performance or install-success claim |
-| 0.2 offline installation | Known failures A and B; not accepted |
-| HP installation | User-reported failure; full HP logs unavailable in this preparation |
-| Update/rollback, Wine end-to-end, profile hardware effects | Not established by parser/UI tests; require separate system acceptance |
-| Clean-host ISO reproduction | Blocked by unpublished exact local bootstrap images and separately acquired inputs |
-| Security/license audit | Scope and results in `PUBLICATION-AUDIT.md`; no automatic claim of vulnerability freedom |
+| Native application tests | 4/4 CTest entries passed on Fedora 44 |
+| Wine launch failure UI | Test script exited with code 7; NOVA reported failure and log location in the UI |
+| Wine console smoke | NOVA-WINE-SMOKE-OK; this checks console Wine only, not arbitrary GUI applications |
+| Store launchers | Stubbed Discover launch verified for Opera GX and Steam application IDs; real downloads/installations were not tested |
+| Runtime image | Built from the pinned Fedora Kinoite 44 base; bootc container lint passed 14 checks with one skipped |
+| Image contents | Wine 11.0 and steam-devices present; signed Flathub remote configured; Opera proprietary RPM absent |
+| Runtime image | Rebuilt candidate image ID sha256:d3a26241fe40a3ccada8673f5bf24c94c5dc0ae86ff3c7d368bbd18eef64958d |
+| 0.2.0 to 0.2.1 laptop update | Not tested on the HP laptop; existing systems require a one-time source switch because 0.2.0 points to nova.invalid |
+| Steam or Opera GX use | Applications are offered through Discover; actual installation, login, games and hardware behavior were not tested |
+| Installer wrapper | Space-checked staging changes are in source, but the rebuilt Live ISO and full offline installation have not passed acceptance |
+| HP installation | Earlier user report documents failure; full Anaconda logs and the exact UUID directory creator were unavailable |
+| Security/license audit | Source audit scope and limitations are in PUBLICATION-AUDIT.md |
+| Clean-room reproducibility | Runtime was rebuilt in the dedicated development VM; package repositories are not snapshot-pinned and bit-identical output is not claimed |
 
-CMake emitted Kirigami QML plugin link-target warnings in this dynamic Qt/KDE
-environment. Compilation and the real offscreen UI test still passed. This does
-not validate static linkage or a different dependency stack. The additive Python
-publication-helper tests are run separately with `python3 tests/publication_test.py`.
-
-Historical 0.1 successes are not carried forward as 0.2 passes. A successful
-compiler/test run does not verify Anaconda, disk formatting, SELinux after first
-boot, physical USB writing, Secure Boot or gaming performance. The release gate
-is `ACCEPTANCE.md`, with issue-specific additions in `INSTALLER-ISSUES.md`.
+The publication audit reported no findings in the current worktree and reachable
+Git history. It is a scoped automated check, not a guarantee that all secrets or
+security issues were found. See ACCEPTANCE.md and INSTALLER-ISSUES.md for
+the remaining release gates.

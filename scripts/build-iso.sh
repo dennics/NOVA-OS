@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 [[ $EUID == 0 ]] || { echo 'Run inside the dedicated Fedora builder as root.' >&2; exit 1; }
-version=${NOVA_VERSION:-0.2.0-preview}
+version=${NOVA_VERSION:-0.2.1-preview}
 [[ "$version" =~ ^[a-zA-Z0-9][a-zA-Z0-9._-]*$ ]] || exit 1
 runtime="localhost/nova:${version}"
 live="localhost/nova-live:${version}"

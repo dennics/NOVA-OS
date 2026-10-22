@@ -1,0 +1,22 @@
+#!/usr/bin/bash
+set -euo pipefail
+
+if (($# < 1)); then
+    echo 'Usage: nova-launch-store-app <supported-app-id> [arguments...]' >&2
+    exit 64
+fi
+
+app_id=$1
+shift
+case "$app_id" in
+    com.opera.opera-gx|com.valvesoftware.Steam) ;;
+    *) echo 'This NOVA launcher does not support that application.' >&2; exit 64 ;;
+esac
+
+if flatpak info --system "$app_id" >/dev/null 2>&1 || flatpak info --user "$app_id" >/dev/null 2>&1; then
+    exec flatpak run "$app_id" "$@"
+fi
+
+# Proprietary applications are installed from their application repository
+# only after the user chooses Install in Discover.
+exec plasma-discover --application "appstream://$app_id"

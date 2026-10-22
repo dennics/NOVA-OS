@@ -5,14 +5,6 @@
     "ref": "quay.io/fedora-ostree-desktops/kinoite:44",
     "digest": "sha256:56da303d6d863db8e18ecc13d1dc0e7fb4d5b600a7408c9797cadc09bac77973"
   },
-  "runtimeBootstrap": {
-    "ref": "localhost/nova:0.1.0-preview",
-    "imageId": "03673dd0b26138651e29bf6191e583b6c034822329eccf3513c937c857678c71"
-  },
-  "liveBootstrap": {
-    "ref": "localhost/nova-live:0.1.0-preview",
-    "imageId": "d35fca470d172a2911a38c15347ce720f6897fe8e10eb03c468555a8ce3823cd"
-  },
   "builder": {
     "ref": "ghcr.io/osbuild/image-builder-cli:latest",
     "digest": "sha256:e003bf6b7fb9a3d2443d5aac539c71e98f4b7d24f2ea85cbe263aee12f3e90d5"

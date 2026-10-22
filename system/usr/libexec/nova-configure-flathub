@@ -1,0 +1,16 @@
+#!/usr/bin/bash
+set -euo pipefail
+
+if [[ $EUID -ne 0 ]]; then
+    echo 'Flathub setup must run as a system service.' >&2
+    exit 2
+fi
+
+if flatpak remotes --system --columns=name | grep -Fxq flathub; then
+    exit 0
+fi
+
+# The official .flatpakrepo file carries Flathub's signing key. Flatpak keeps
+# signature verification enabled for applications installed from this remote.
+exec flatpak remote-add --system --if-not-exists flathub \
+    https://dl.flathub.org/repo/flathub.flatpakrepo

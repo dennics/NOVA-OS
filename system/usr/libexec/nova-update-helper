@@ -1,8 +1,12 @@
 #!/usr/bin/bash
 set -euo pipefail
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+export LC_ALL=C.UTF-8
 
 [[ $EUID -eq 0 && $# -eq 1 ]] || { echo 'Run through NOVA authorization with one operation.' >&2; exit 2; }
-case "$1" in check|download|stage|rollback) ;; *) echo 'Unsupported update operation.' >&2; exit 2 ;; esac
+case "$1" in check|download|stage|install|rollback|enable-preview) ;; *) echo 'Unsupported update operation.' >&2; exit 2 ;; esac
+exec 9>/run/nova-update.lock
+flock -n 9 || { echo 'Another NOVA update operation is running. Try again when it finishes.' >&2; exit 4; }
 
 status=$(bootc status --format=json --format-version=1)
 jq -e '.status.booted != null and (.status.readOnly | not)' <<<"$status" >/dev/null \
@@ -14,6 +18,26 @@ if [[ $1 == rollback ]]; then
     exec bootc rollback
 fi
 
+if [[ $1 == enable-preview ]]; then
+    jq -e '.name == "NOVA OS"' /usr/lib/nova/release.json >/dev/null
+    source_image=$(jq -r '.spec.image.image // ""' <<<"$status")
+    [[ "$source_image" =~ ^ghcr\.io/dennics/nova-os:0\.[0-9]+(\.[0-9]+)?-preview$ || "$source_image" == nova.invalid/nova:preview || "$source_image" =~ ^localhost/nova:[a-zA-Z0-9._-]+$ ]] \
+        || { echo 'This system does not use a recognized legacy NOVA Preview source.' >&2; exit 3; }
+fi
+
+# Keep room for the incoming deployment. bootc also performs its own allocation checks.
+if [[ $1 == download || $1 == install || $1 == enable-preview ]]; then
+    storage=/sysroot
+    [[ -d "$storage/ostree" ]] || storage=/
+    free_kib=$(df -Pk "$storage" | awk 'NR == 2 {print $4}')
+    [[ "$free_kib" =~ ^[0-9]+$ && "$free_kib" -ge 8388608 ]] \
+        || { echo 'At least 8 GiB of free system space is required before downloading a NOVA update. Open This PC to review storage.' >&2; exit 5; }
+fi
+
+if [[ $1 == enable-preview ]]; then
+    exec bootc switch ghcr.io/dennics/nova-os:preview
+fi
+
 jq -e '.spec.image.transport == "registry" and (.spec.image.image | type == "string" and length > 0 and (startswith("localhost/") | not) and (startswith("nova.invalid/") | not))' <<<"$status" >/dev/null \
     || { echo 'No remote NOVA update source is configured.' >&2; exit 3; }
 
@@ -21,4 +45,5 @@ case "$1" in
     check) exec bootc upgrade --check ;;
     download) exec bootc upgrade --download-only ;;
     stage) exec bootc upgrade --from-downloaded ;;
+    install) exec bootc upgrade ;;
 esac

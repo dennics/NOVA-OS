@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=NOVA Update
+Comment=System updates and recovery
+Comment[ro]=Actualizări de sistem și recuperare
+Exec=nova-control-center --page updates
+Icon=nova-update
+Terminal=false
+Categories=System;Settings;
+StartupNotify=true

@@ -1,0 +1,12 @@
+[Unit]
+Description=Check NOVA image metadata for updates
+Wants=network-online.target
+After=network-online.target
+ConditionPathExists=/run/ostree-booted
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/nova-update-helper check
+TimeoutStartSec=5min
+Nice=10
+IOSchedulingClass=idle

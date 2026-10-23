@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+import re
 import subprocess
 
 
@@ -13,11 +14,19 @@ def command(*args):
 root = Path(__file__).resolve().parents[1]
 artifacts = root / "artifacts"
 test_log = (artifacts / "native-tests.log").read_text()
-if test_log.count("Test Passed.") < 2 or "Test Failed." in test_log:
+passed_tests = test_log.count("Test Passed.")
+summary = re.search(r"100% tests passed, 0 tests failed out of (\d+)", test_log)
+if summary:
+    passed_tests = len(re.findall(r"(?m)^\s*\d+/\d+ Test #[^\n]*\bPassed\b", test_log))
+    if passed_tests != int(summary.group(1)):
+        raise SystemExit("CTest summary does not match the recorded test entries")
+if passed_tests < 2 or "Test Failed." in test_log or "***Failed" in test_log:
     raise SystemExit("Native test evidence is missing or contains failures")
-checksum = (artifacts / "NOVA-OS-0.2-Preview-x86_64.iso.sha256").read_text().split()[0]
 runtime = json.loads((artifacts / "runtime-inspect.json").read_text())[0]
 version = runtime["Labels"]["org.opencontainers.image.version"]
+artifact_version = version.removesuffix(".0-preview") if version.endswith(".0-preview") else version.removesuffix("-preview")
+iso_name = f"NOVA-OS-{artifact_version}-Preview-x86_64.iso"
+checksum = (artifacts / (iso_name + ".sha256")).read_text().split()[0]
 live = json.loads(command("podman", "image", "inspect", f"localhost/nova-live:{version}"))[0]
 tools = json.loads((artifacts / "build-tools-inspect.json").read_text())[0]
 evidence_names = ["packages.txt", "runtime-inspect.json", "native-tests.log",
@@ -38,8 +47,8 @@ manifest = {
     "name": "NOVA OS",
     "createdAt": datetime.now(timezone.utc).isoformat(),
     "sources": json.loads((artifacts / "sources.lock.json").read_text()),
-    "iso": {"file": "NOVA-OS-0.2-Preview-x86_64.iso", "sha256": checksum,
-            "bytes": (artifacts / "NOVA-OS-0.2-Preview-x86_64.iso").stat().st_size},
+    "iso": {"file": iso_name, "sha256": checksum,
+            "bytes": (artifacts / iso_name).stat().st_size},
     "images": {"runtime": runtime["Id"], "live": live["Id"], "isoTools": tools["Id"]},
     "evidenceSha256": evidence,
     "tools": {name: command(*args) for name, args in {
@@ -49,7 +58,7 @@ manifest = {
         "kernel": ("uname", "-r"),
     }.items()},
     "sourceFiles": sources,
-    "nativeTests": {"status": "passed", "evidence": "native-tests.log"},
+    "nativeTests": {"status": "passed", "passed": passed_tests, "evidence": "native-tests.log"},
     "vmAcceptance": {"status": "not-run", "recordedAtBuild": True, "criteria": "docs/ACCEPTANCE.md"},
 }
 (artifacts / "build-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")

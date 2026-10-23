@@ -82,6 +82,8 @@ assert after.sections() == before.sections()
 print('NOVA Plymouth: 96px RGBA mark, unchanged native dialogs and progress settings')
 PY
 
+python3 /usr/libexec/nova-image/generate-boot-frames.py "$nova_theme" "$mark"
+
 # Select without the helper's separate host-oriented initramfs command.
 plymouth-set-default-theme nova
 test "$(plymouth-set-default-theme)" = nova

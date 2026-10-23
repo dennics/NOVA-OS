@@ -1,0 +1,15 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Id": "org.novaos.launcher",
+        "Name": "NOVA Start",
+        "Description": "A cosmic application launcher for NOVA OS",
+        "Icon": "nova-control-center",
+        "Version": "0.3.0",
+        "License": "MIT",
+        "Authors": [{"Name": "NOVA OS contributors"}],
+        "Category": "Application Launchers"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "X-Plasma-Provides": ["org.kde.plasma.launchermenu"]
+}

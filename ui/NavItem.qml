@@ -24,6 +24,7 @@ Button {
             font.pixelSize: Theme.body
             font.weight: button.selected ? Font.DemiBold : Font.Normal
             color: button.selected ? Theme.text : Theme.muted
+            elide: Text.ElideRight
             Layout.fillWidth: true
         }
     }

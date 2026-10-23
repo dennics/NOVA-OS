@@ -1,0 +1,22 @@
+# Small maintenance image derived from the previously tested NOVA 0.3 runtime.
+# The full Containerfile also includes these files on a fresh source build.
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+ARG NOVA_VERSION=0.3.1-preview
+COPY system/usr/bin/nova-launch-store-app /usr/bin/nova-launch-store-app
+COPY system/usr/share/nova/store/ /usr/share/nova/store/
+RUN chmod 0755 /usr/bin/nova-launch-store-app && \
+    bash -n /usr/bin/nova-launch-store-app && \
+    printf '%s  %s\n' \
+      766728a8134acfbb56fe5e26187818e6f39937c137cf9e19ffbea75077ad0bfb /usr/share/nova/store/com.valvesoftware.Steam.flatpakref \
+      0cb2f0def83a961b6ab55464031e84ea1318011aca66c6d994e6e293d40df99d /usr/share/nova/store/com.opera.opera-gx.flatpakref \
+      | sha256sum --check && \
+    jq --arg version "$NOVA_VERSION" '.version = $version' /usr/lib/nova/release.json > /usr/lib/nova/release.json.new && \
+    mv /usr/lib/nova/release.json.new /usr/lib/nova/release.json && \
+    sed -i "s/^PRETTY_NAME=.*/PRETTY_NAME=\"NOVA OS ${NOVA_VERSION}\"/" /usr/lib/os-release && \
+    printf 'NOVA OS release 44 (%s)\n' "$NOVA_VERSION" > /etc/system-release && \
+    bootc container lint
+LABEL org.opencontainers.image.source="https://github.com/dennics/NOVA-OS" \
+      org.opencontainers.image.title="NOVA OS" \
+      org.opencontainers.image.description="NOVA OS Preview — Steam and Opera GX store repair" \
+      org.opencontainers.image.version="${NOVA_VERSION}"

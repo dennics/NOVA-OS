@@ -1,7 +1,7 @@
 ARG BASE_IMAGE
 ARG LIVE_BOOTSTRAP_IMAGE=runtime
 FROM ${BASE_IMAGE} AS runtime
-ARG NOVA_VERSION=0.2.1-preview
+ARG NOVA_VERSION=0.3.0-preview
 COPY system/ /
 COPY build/install/ /
 RUN --mount=type=cache,target=/var/cache/libdnf5 \
@@ -13,7 +13,7 @@ LABEL org.opencontainers.image.source="https://github.com/dennics/NOVA-OS" \
       org.opencontainers.image.version="${NOVA_VERSION}"
 
 FROM ${LIVE_BOOTSTRAP_IMAGE} AS live
-ARG NOVA_VERSION=0.2.1-preview
+ARG NOVA_VERSION=0.3.0-preview
 COPY system/ /
 COPY build/install/ /
 COPY installer/ /

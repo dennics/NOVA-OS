@@ -20,17 +20,23 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+[assembly: AssemblyTitle("NOVA Media Creation Tool")]
+[assembly: AssemblyProduct("NOVA OS 0.3 Preview USB Kit")]
+[assembly: AssemblyVersion("0.3.0.0")]
+[assembly: AssemblyFileVersion("0.3.0.0")]
+
 namespace Nova.MediaCreator
 {
     internal static class Release
     {
-        public const long IsoBytes = 5348950016L;
-        public const string IsoSha256 = "d1b7322bae282c4588430e0f67657a73f0ccc2ef275770e35c2b759cd0019f7a";
-        public const string IsoName = "NOVA-OS-0.2-Preview-x86_64.iso";
+        public const long IsoBytes = 4950038528L;
+        public const string IsoSha256 = "9119ccb6e21780f0310c59a4a68c82a97c9373da74361aff9bd67c9afdd23240";
+        public const string IsoName = "NOVA-OS-0.3-Preview-x86_64.iso";
         public const string VendorZipSha256 = "1043a01b5bfc4b0a79b4f431696eeaeb18c605f38579009877aada3a836904da";
         public const string HelperSha256 = "bcb7c9f9d57ad58bbc8433e475af8fec13e47c5b236dc4bab1c61ceeb7cf6303";
         public const string VendorVersion = "5.3.2";
-        public const long MinimumUsbBytes = 8L * 1024L * 1024L * 1024L;
+        // A nominal 8 GB USB exposes less than 8 GiB; the exact ISO must also fit.
+        public const long MinimumUsbBytes = 7L * 1024L * 1024L * 1024L;
     }
 
     internal sealed class UsbDisk
@@ -86,7 +92,7 @@ namespace Nova.MediaCreator
                     string model = Text(Read(item, "FriendlyName"));
                     if (String.IsNullOrWhiteSpace(model)) model = Text(Read(item, "Model"));
                     long bytes = Convert.ToInt64(size);
-                    if (bytes < Release.MinimumUsbBytes || (String.IsNullOrWhiteSpace(unique) && String.IsNullOrWhiteSpace(serial))) continue;
+                    if (bytes < Release.MinimumUsbBytes || bytes < Release.IsoBytes || (String.IsNullOrWhiteSpace(unique) && String.IsNullOrWhiteSpace(serial))) continue;
                     bool boot = RequiredBool(item, "IsBoot"), system = RequiredBool(item, "IsSystem");
                     bool readOnly = RequiredBool(item, "IsReadOnly"), offline = RequiredBool(item, "IsOffline");
                     if (boot || system || readOnly || offline) continue;
@@ -194,7 +200,7 @@ namespace Nova.MediaCreator
             {
                 if (String.IsNullOrWhiteSpace(path) || !File.Exists(path)) throw new FileNotFoundException("Alege imaginea NOVA ISO.");
                 FileInfo info = new FileInfo(path);
-                if (info.Length != Release.IsoBytes) throw new InvalidDataException("Dimensiunea ISO-ului nu corespunde imaginii NOVA 0.2 Preview.");
+                if (info.Length != Release.IsoBytes) throw new InvalidDataException("Dimensiunea ISO-ului nu corespunde imaginii NOVA 0.3 Preview.");
                 string digest;
                 using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 8 * 1024 * 1024, FileOptions.SequentialScan))
             using (SHA256 sha = SHA256.Create())
@@ -207,7 +213,7 @@ namespace Nova.MediaCreator
                     }
                     sha.TransformFinalBlock(new byte[0], 0, 0); digest = BitConverter.ToString(sha.Hash).Replace("-", "").ToLowerInvariant();
                 }
-                if (!String.Equals(digest, Release.IsoSha256, StringComparison.OrdinalIgnoreCase)) throw new InvalidDataException("SHA-256 nu corespunde NOVA OS 0.2 (" + digest + "). ISO-ul nu va fi scris pe stick.");
+                if (!String.Equals(digest, Release.IsoSha256, StringComparison.OrdinalIgnoreCase)) throw new InvalidDataException("SHA-256 nu corespunde NOVA OS 0.3 (" + digest + "). ISO-ul nu va fi scris pe stick.");
                 return true;
             }, token).ConfigureAwait(false);
         }
@@ -517,7 +523,7 @@ namespace Nova.MediaCreator
 #if PREVIEW
             subtitle.Text = "PREVIEW QA  ·  SCRIEREA ESTE DEZACTIVATĂ";
 #endif
-            Label tag = LabelText("0.2 PREVIEW  ·  WINDOWS", 9F, false, muted); tag.Anchor = AnchorStyles.Top | AnchorStyles.Right; tag.Location = new Point(Width - 250, 48);
+            Label tag = LabelText("0.3 PREVIEW  ·  WINDOWS", 9F, false, muted); tag.Anchor = AnchorStyles.Top | AnchorStyles.Right; tag.Location = new Point(Width - 250, 48);
             header.Controls.Add(title); header.Controls.Add(subtitle); header.Controls.Add(tag);
 
             Panel content = new Panel { Dock = DockStyle.Fill, AutoScroll = true, Padding = new Padding(28, 12, 28, 12), BackColor = bg };
@@ -562,7 +568,7 @@ namespace Nova.MediaCreator
 
             Panel footer = new Panel { Dock = DockStyle.Bottom, Height = 62, Padding = new Padding(28, 10, 28, 8), BackColor = Color.FromArgb(13, 16, 25) };
             status = LabelText("Pregătit · nicio modificare nu se face fără confirmarea ta", 9F, true, blue); status.Location = new Point(28, 11);
-            detail = LabelText("NOVA OS 0.2 Preview  ·  Fedora Media Writer helper 5.3.2", 8.5F, false, muted); detail.Location = new Point(28, 34);
+            detail = LabelText("NOVA OS 0.3 Preview  ·  Fedora Media Writer helper 5.3.2", 8.5F, false, muted); detail.Location = new Point(28, 34);
 #if PREVIEW
             status.Text = "PREVIEW SIGUR · scrierea pe dispozitive este dezactivată"; detail.Text = "Mock USB · nicio partiție sau unitate nu este accesată";
 #endif
@@ -590,7 +596,7 @@ namespace Nova.MediaCreator
         {
             using (OpenFileDialog dialog = new OpenFileDialog())
             {
-                dialog.Title = "Alege imaginea NOVA OS 0.2 Preview"; dialog.Filter = "Imagine NOVA ISO (*.iso)|*.iso|Toate fișierele (*.*)|*.*"; dialog.CheckFileExists = true;
+                dialog.Title = "Alege imaginea NOVA OS 0.3 Preview"; dialog.Filter = "Imagine NOVA ISO (*.iso)|*.iso|Toate fișierele (*.*)|*.*"; dialog.CheckFileExists = true;
                 if (dialog.ShowDialog(this) == DialogResult.OK) { isoPath = dialog.FileName; isoBox.Text = Path.GetFileName(isoPath); new ToolTip().SetToolTip(isoBox, isoPath); verified = false; writeButton.Enabled = false; isoState.Text = "ISO selectat · verificarea este necesară"; status.Text = "Imaginea trebuie verificată înainte de scriere"; }
             }
         }
@@ -632,7 +638,7 @@ namespace Nova.MediaCreator
             if (!verified || drives.SelectedIndex < 0) return;
             UsbDisk selected = disks[drives.SelectedIndex];
             DialogResult answer = MessageBox.Show(this,
-                "Se va șterge TOT conținutul de pe:\r\n\r\n" + selected.DisplayName + "\r\n\r\nImagine: NOVA OS 0.2 Preview\r\n\r\nContinuăm?",
+                "Se va șterge TOT conținutul de pe:\r\n\r\n" + selected.DisplayName + "\r\n\r\nImagine: NOVA OS 0.3 Preview\r\n\r\nContinuăm?",
                 "Confirmă ștergerea stickului USB", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
             if (answer != DialogResult.Yes) return;
             WriteConfirmed(selected);

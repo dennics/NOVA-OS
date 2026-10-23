@@ -8,7 +8,7 @@ Qt 6.11.2. On a disposable development VM install:
 ```sh
 sudo dnf install cmake ninja-build gcc-c++ qt6-qtbase-devel qt6-qtdeclarative-devel \
   qt6-qtsvg-devel kf6-kconfig-devel kf6-kirigami-devel kf6-kiconthemes-devel \
-  extra-cmake-modules breeze-icon-theme
+  extra-cmake-modules breeze-icon-theme python3 jq
 cmake -S . -B build/native -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
 cmake --build build/native -j2
 ctest --test-dir build/native --output-on-failure
@@ -26,7 +26,7 @@ QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software build/native/nova-control-ce
 validate system services or installation. `NOVA_BUILD_DESKTOP=OFF` allows building
 the metrics parser/test independently of Qt/KDE.
 
-## 0.2.1 Preview image pipeline
+## Preview image pipeline
 
 Use a dedicated Fedora 44 VM (4 CPUs, 8 GiB RAM planned, 100 GB development
 disk plus sufficient free storage for intermediates). The bootstrap configures
@@ -50,14 +50,36 @@ records image and package provenance. The 0.2.1 runtime build and native checks
 have evidence in VALIDATION.md. The full iso build and offline installation
 from the resulting ISO have not passed acceptance for this update; do not treat
 successful runtime image construction as an installer test.
+
+`NOVA_VERSION` now defaults to `0.3.0-preview`. The current local 0.3 validation
+used the already built 0.2.1 runtime as an explicit Containerfile base; its image
+ID and the scope of that test are recorded in [VALIDATION-0.3.md](VALIDATION-0.3.md).
+The documented native build runs seven CTest suites on Linux, including update
+publication guards and deterministic sound generation. Export a disk-backed
+`TMPDIR` before configuring if the development VM's `/tmp` is quota constrained.
+
+After the release's deployment/rollback checks pass and registry credentials are
+configured in the builder, `sudo NOVA_VERSION=0.3.0-preview bash
+scripts/publish-update.sh` uploads a numbered image and promotes the anonymously
+readable exact digest to `ghcr.io/dennics/nova-os:preview`. Do not advertise the
+channel before that verification passes. Existing numbered Preview references
+need one migration to the moving channel; see [NOVA-0.3.md](NOVA-0.3.md).
 ## Windows Media Creation Tool
 
-Source is in `tools/nova-media-creator/`. The original build requires Windows,
-.NET Framework 4.8, the pinned Fedora Media Writer 5.3.2 portable ZIP and the exact
-historical ISO. The latter pins are intentionally preserved for provenance and
-must be updated in both `App.cs` and `build.ps1` only after a fixed ISO passes
-acceptance. Do not compile/distribute a new recommended kit around the defective ISO.
-No physical USB is touched by source preparation/auditing.
+Source is in `tools/nova-media-creator/`. Building requires Windows, .NET Framework
+4.8+, the pinned Fedora Media Writer 5.3.2 portable ZIP and the exact 0.3 ISO in
+`artifacts/`. `App.cs` and `build.ps1` pin both 4,950,038,528 bytes and SHA-256
+`9119ccb6e21780f0310c59a4a68c82a97c9373da74361aff9bd67c9afdd23240`.
+The build compiles the real writer and a separate safe QA executable, waits for
+its self-test, then records both hashes and the source hashes in a release JSON.
+The self-test reads the ISO and embedded vendor ZIP; it does not enumerate or
+write USB disks. The real writer still requires the selected USB and confirmation.
+
+`python tools/nova-media-creator/package_usb_kit.py` packages the verified ISO,
+real writer, source archive, notices and build evidence as a ZIP64 kit, checks its
+CRC and emits a SHA-256 file. The NOVA source archive and upstream Media Writer
+5.3.2 source archive must be present. This local experimental kit is not a public
+stable binary release; consult `VALIDATION-0.3.md` for the actual test scope.
 
 ## Original local QEMU helper
 

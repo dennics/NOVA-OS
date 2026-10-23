@@ -12,7 +12,7 @@ printf '%s  %s\n' "$flathub_sha256" "$flathub_repo" | sha256sum --check --status
 grep -Fxq 'Url=https://dl.flathub.org/repo/' "$flathub_repo"
 grep -q '^GPGKey=.' "$flathub_repo"
 missing=()
-for package in firewalld qemu-guest-agent glibc-langpack-ro kf6-kirigami kf6-kiconthemes wine ark unar 7zip pciutils gamemode steam-devices tuned-ppd; do
+for package in firewalld qemu-guest-agent glibc-langpack-ro kf6-kirigami kf6-kiconthemes wine ark unar 7zip pciutils gamemode steam-devices tuned-ppd pipewire-utils gettext; do
     rpm -q --quiet "$package" || missing+=("$package")
 done
 if ((${#missing[@]})); then
@@ -39,13 +39,18 @@ for desktop in org.novaos.ControlCenter org.kde.dolphin opera-gx com.valvesoftwa
     test -f "/usr/share/applications/$desktop.desktop"
 done
 sed -i -e 's/^NAME=.*/NAME="NOVA OS"/' \
-    -e 's/^PRETTY_NAME=.*/PRETTY_NAME="NOVA OS 0.2 Preview"/' /usr/lib/os-release
+    -e "s/^PRETTY_NAME=.*/PRETTY_NAME=\"NOVA OS ${version}\"/" /usr/lib/os-release
 install -d /usr/share/nova /usr/lib/nova
-printf '{"name":"NOVA OS","version":"%s","updateChannel":null,"preview":true}\n' "$version" >/usr/lib/nova/release.json
-printf 'NOVA OS release 44 (0.2 Preview)\n' >/etc/system-release
+printf '{"name":"NOVA OS","version":"%s","updateChannel":"NOVA Preview","updateImage":"ghcr.io/dennics/nova-os:preview","preview":true}\n' "$version" >/usr/lib/nova/release.json
+printf 'NOVA OS release 44 (%s)\n' "$version" >/etc/system-release
 kwriteconfig6 --file /etc/xdg/kdeglobals --group KDE --key LookAndFeelPackage org.novaos.desktop
 kwriteconfig6 --file /etc/xdg/kdeglobals --group General --key ColorScheme NovaDark
 kwriteconfig6 --file /etc/xdg/kdeglobals --group Icons --key Theme breeze-dark
+kwriteconfig6 --file /etc/xdg/kdeglobals --group Sounds --key Theme Nova
+python3 /usr/libexec/nova-image/generate-sounds.py /usr/share/sounds/Nova/stereo
+install -d /usr/share/locale/ro/LC_MESSAGES
+msgfmt --check /usr/share/nova/translations/plasma_applet_org.novaos.launcher.ro.po \
+    -o /usr/share/locale/ro/LC_MESSAGES/plasma_applet_org.novaos.launcher.mo
 install -d /usr/share/wallpapers/NovaDark/contents/images
 QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software nova-control-center \
     --render-wallpaper /usr/share/wallpapers/NovaDark/contents/images/3840x2160.png
@@ -60,6 +65,7 @@ if test -f /usr/lib/plasmalogin/defaults.conf; then
 fi
 systemctl enable firewalld.service
 systemctl enable nova-flathub-setup.service
+systemctl enable nova-update-check.timer
 # Anaconda creates the local account; NOVA owns the first-login welcome.
 # KDE's documented completion flag prevents its separate setup autologin.
 install -m 0644 /dev/null /etc/plasma-setup-done
@@ -72,7 +78,7 @@ if rpm -q --quiet plasma-welcome; then
 fi
 test -f /etc/selinux/config
 sed -i 's/^SELINUX=.*/SELINUX=enforcing/' /etc/selinux/config
-# Preview images have no public update source. Local update/rollback tests use bootc explicitly.
+# NOVA performs metadata checks on its own timer. Installation and reboot stay user controlled.
 for unit in bootc-fetch-apply-updates.timer rpm-ostreed-automatic.timer; do
     systemctl disable "$unit" 2>/dev/null || true
 done

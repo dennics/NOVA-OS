@@ -13,10 +13,29 @@ case "$app_id" in
     *) echo 'This NOVA launcher does not support that application.' >&2; exit 64 ;;
 esac
 
-if flatpak info --system "$app_id" >/dev/null 2>&1 || flatpak info --user "$app_id" >/dev/null 2>&1; then
-    exec flatpak run "$app_id" "$@"
+if flatpak info --user "$app_id" >/dev/null 2>&1; then
+    exec flatpak run --user "$app_id" "$@"
+fi
+if flatpak info --system "$app_id" >/dev/null 2>&1; then
+    exec flatpak run --system "$app_id" "$@"
 fi
 
-# Proprietary applications are installed from their application repository
-# only after the user chooses Install in Discover.
-exec plasma-discover --application "appstream://$app_id"
+fail() {
+    printf '%s\n' "$1" >&2
+    if command -v kdialog >/dev/null 2>&1; then
+        kdialog --title 'NOVA Applications' --error "$1" || true
+    fi
+    exit 1
+}
+
+# QUrl normalizes an appstream:// hostname to lowercase, breaking case-sensitive
+# IDs such as com.valvesoftware.Steam. A local upstream Flatpak reference also
+# works before the Flathub AppStream catalog has been downloaded.
+prefix=$(cd -- "$(dirname -- "$(readlink -f -- "$0")")/.." && pwd -P)
+reference="$prefix/share/nova/store/$app_id.flatpakref"
+[[ -r "$reference" ]] || fail 'The application install reference is missing. Please report this to NOVA OS.'
+command -v plasma-discover >/dev/null 2>&1 || fail 'Discover is unavailable. Please report this to NOVA OS.'
+
+# Discover presents the origin and permissions; installation requires the user's
+# confirmation. No proprietary application binaries are included in NOVA.
+exec plasma-discover --local-filename "$reference"

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=NOVA Task Manager
+Comment=Processes, CPU and memory
+Exec=nova-control-center --page tasks
+Icon=nova-task-manager
+Terminal=false
+Categories=System;Monitor;
+StartupNotify=true

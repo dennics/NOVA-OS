@@ -3,7 +3,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 [[ $EUID == 0 ]] || { echo 'Run in the dedicated Fedora builder as root.' >&2; exit 1; }
 stage=${1:-iso}
-version=${NOVA_VERSION:-0.2.1-preview}
+version=${NOVA_VERSION:-0.3.0-preview}
 [[ "$version" =~ ^[a-zA-Z0-9][a-zA-Z0-9._-]*$ ]] || { echo 'Invalid NOVA_VERSION' >&2; exit 1; }
 case "$stage" in runtime|live|iso) ;; *) echo 'Usage: scripts/build.sh [runtime|live|iso]' >&2; exit 1;; esac
 for tool in podman skopeo jq cmake ninja ctest; do command -v "$tool" >/dev/null; done

@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 var panel = new Panel;
 panel.location = "bottom";
-panel.height = 52;
+panel.height = 56;
 panel.floating = true;
+panel.alignment = "center";
+panel.lengthMode = "fit";
 
-var start = panel.addWidget("org.kde.plasma.kickoff");
-start.currentConfigGroup = ["General"];
-start.writeConfig("icon", "nova-control-center");
-start.writeConfig("alphaSort", true);
+var start = panel.addWidget("org.novaos.launcher");
+start.globalShortcut = "Alt+F1";
 
 var tasks = panel.addWidget("org.kde.plasma.icontasks");
 tasks.currentConfigGroup = ["General"];
 tasks.writeConfig("launchers", [
     "applications:org.novaos.ControlCenter.desktop",
-    "applications:org.kde.dolphin.desktop",
+    "applications:org.novaos.ThisPC.desktop",
     "applications:opera-gx.desktop",
     "applications:org.kde.discover.desktop"
 ]);

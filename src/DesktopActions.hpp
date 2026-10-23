@@ -9,6 +9,7 @@ public:
     using QObject::QObject;
     QString error() const { return m_error; }
     Q_INVOKABLE bool launch(const QString &action);
+    Q_INVOKABLE bool previewSound(const QString &event);
 signals:
     void errorChanged();
 private:

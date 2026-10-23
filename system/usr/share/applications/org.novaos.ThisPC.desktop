@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=This PC
+Name[ro]=Acest PC
+Comment=Personal folders and storage
+Comment[ro]=Foldere personale și stocare
+Exec=nova-control-center --page thispc
+Icon=nova-thispc
+Terminal=false
+Categories=System;FileManager;
+StartupNotify=true

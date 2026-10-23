@@ -1,0 +1,20 @@
+{
+  "version": "0.3.1-preview",
+  "date": "2026-10-23",
+  "image": "ghcr.io/dennics/nova-os:0.3.1-preview",
+  "channel": "ghcr.io/dennics/nova-os:preview",
+  "digest": "sha256:cb9046a8af7263fd969d1de91b5c3e97c251a10d3efa71600864fde4c2a141fc",
+  "anonymousPullVerified": true,
+  "launcherTestsPassed": 6,
+  "bootcLintPassed": 14,
+  "bootcLintSkipped": 1,
+  "installedColdBootVerified": true,
+  "rollbackColdBootVerified": true,
+  "personalFileAndPreferencesRetained": true,
+  "selinux": "Enforcing",
+  "firewall": "active",
+  "warmRebootVerified": false,
+  "warmRebootLimit": "Windows QEMU/WHPX failed to get xsave state; Unexpected VP exit code 4",
+  "physicalHardwareVerified": false,
+  "steamInstallationOrGamesVerified": false
+}

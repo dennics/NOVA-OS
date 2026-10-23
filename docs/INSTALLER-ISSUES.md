@@ -1,5 +1,21 @@
 # Installer failures — validation still open
 
+## 0.3 local ISO follow-up (2026-10-22)
+
+The unmodified 0.3 ISO completed offline Anaconda/bootc installation on a fresh
+48 GiB UEFI VM disk, then booted without the ISO and allowed local login. The
+disk-backed `/var/tmp` staging mount was present during deployment and released
+afterward. Root/boot finalization completed, the installed system is SELinux
+Enforcing, and a user-file fixture survived the power cycle. Neither reported
+failure occurred in this plain ext4 whole-disk case. Exact image/checksum and
+test limits are in [VALIDATION-0.3.md](VALIDATION-0.3.md).
+
+This does not close the HP report or validate encryption, manual partitioning,
+low-space/interruption/retry cases. The remaining historical analysis below
+describes the earlier 0.2/0.2.1 snapshot; it is not evidence of 0.3 failures.
+
+## Earlier investigation
+
 Status: mitigation implemented in source; full installation remains unverified.
 The 0.2.1 runtime update does not contain an updated Live installer. No rebuilt
 0.2.1 ISO or successful offline installation is claimed.

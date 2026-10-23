@@ -15,7 +15,7 @@ ApplicationWindow {
     title: "NOVA — " + Theme.textFor("Control Center", "Centrul de control")
     property int page: initialPage
     property bool showWelcome: welcomeMode
-    readonly property var titles: [Theme.textFor("Overview", "Privire de ansamblu"), Theme.textFor("Personalization", "Personalizare"), Theme.textFor("Performance", "Performanță"), Theme.textFor("System & devices", "Sistem și dispozitive"), Theme.textFor("Updates", "Actualizări"), Theme.textFor("Driver Center", "Centrul de drivere")]
+    readonly property var titles: [Theme.textFor("Overview", "Privire de ansamblu"), Theme.textFor("Personalization", "Personalizare"), Theme.textFor("Performance", "Performanță"), Theme.textFor("System & devices", "Sistem și dispozitive"), Theme.textFor("Updates", "Actualizări"), Theme.textFor("Driver Center", "Centrul de drivere"), Theme.textFor("This PC", "Acest PC"), Theme.textFor("Task Manager", "Task Manager")]
     function ensureFocusVisible() {
         const focus = activeFocusItem
         if (!focus) return
@@ -42,8 +42,14 @@ ApplicationWindow {
     Binding {
         target: Metrics
         property: "active"
-        value: window.visible && window.visibility !== Window.Minimized && window.page === 2 && !window.showWelcome
+        value: window.visible && window.visibility !== Window.Minimized && (window.page === 2 || window.page === 7) && !window.showWelcome
     }
+    Binding {
+        target: Processes
+        property: "active"
+        value: window.visible && window.visibility !== Window.Minimized && window.page === 7 && !window.showWelcome
+    }
+    Timer { interval: 60000; running: window.visible && window.visibility !== Window.Minimized && window.page === 4; repeat: true; onTriggered: Updates.refresh() }
 
     RowLayout {
         anchors.fill: parent
@@ -56,10 +62,10 @@ ApplicationWindow {
             ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: 20
-                spacing: 8
+                spacing: window.height < 680 ? 4 : 8
                 RowLayout {
                     Layout.topMargin: 12
-                    Layout.bottomMargin: 38
+                    Layout.bottomMargin: 20
                     spacing: 12
                     Image { source: "qrc:/assets/nova-mark.svg"; sourceSize.width: 40; sourceSize.height: 40; Layout.preferredWidth: 40; Layout.preferredHeight: 40 }
                     ColumnLayout {
@@ -70,8 +76,9 @@ ApplicationWindow {
                 }
                 Text { text: Theme.textFor("YOUR WORKSPACE", "SPAȚIUL TĂU"); color: "#68758e"; font.pixelSize: 10; font.letterSpacing: 1.5; Layout.leftMargin: 12; Layout.bottomMargin: 8 }
                 Repeater {
-                    model: ["view-dashboard", "preferences-desktop-theme-global", "utilities-system-monitor", "preferences-system", "system-software-update", "video-display"]
+                    model: ["view-dashboard", "preferences-desktop-theme-global", "preferences-system-power-management", "preferences-system", "system-software-update", "video-display", "computer", "utilities-system-monitor"]
                     delegate: NavItem {
+                        implicitHeight: window.height < 680 ? 40 : 48
                         objectName: "nav-" + index
                         required property int index
                         required property string modelData
@@ -87,7 +94,7 @@ ApplicationWindow {
                 RowLayout {
                     spacing: 8
                     Rectangle { width: 6; height: 6; radius: 3; color: Theme.violet }
-                    Text { text: "0.2 PREVIEW"; color: Theme.muted; font.pixelSize: 11; font.letterSpacing: 1.2 }
+                    Text { text: "0.3 PREVIEW"; color: Theme.muted; font.pixelSize: 11; font.letterSpacing: 1.2 }
                 }
                 Text { text: "Your PC. Your Power."; color: "#68758e"; font.pixelSize: 11; Layout.topMargin: 4; Layout.bottomMargin: 8 }
             }
@@ -175,7 +182,7 @@ ApplicationWindow {
                         Layout.leftMargin: 32
                         Layout.rightMargin: 32
                         Layout.preferredHeight: item ? item.implicitHeight : 0
-                        sourceComponent: window.showWelcome ? welcomePage : window.page === 0 ? overviewPage : window.page === 1 ? appearancePage : window.page === 2 ? performancePage : window.page === 3 ? systemPage : window.page === 4 ? updatesPage : driversPage
+                        sourceComponent: window.showWelcome ? welcomePage : window.page === 0 ? overviewPage : window.page === 1 ? appearancePage : window.page === 2 ? performancePage : window.page === 3 ? systemPage : window.page === 4 ? updatesPage : window.page === 5 ? driversPage : window.page === 6 ? thisPcPage : taskManagerPage
                         onCinematicMotionChanged: if (!cinematicMotion) { cinematicPulse.stop(); cinematicAccent.opacity = 0 }
                         onLoaded: {
                             scroll.contentItem.contentY = 0
@@ -256,7 +263,7 @@ ApplicationWindow {
             RowLayout {
                 Layout.fillWidth: true
                 spacing: 12
-                NovaButton { Layout.fillWidth: true; text: Theme.textFor("Files", "Fișiere"); iconName: "system-file-manager"; onClicked: DesktopActions.launch("files") }
+                NovaButton { Layout.fillWidth: true; text: Theme.textFor("This PC", "Acest PC"); iconName: "computer"; onClicked: window.page = 6 }
                 NovaButton { Layout.fillWidth: true; text: Theme.textFor("Applications", "Aplicații"); iconName: "applications-all"; onClicked: DesktopActions.launch("apps") }
                 NovaButton { Layout.fillWidth: true; text: Theme.textFor("Make it yours", "Personalizează"); primary: true; iconName: "preferences-desktop-theme-global"; onClicked: window.page = 1 }
             }
@@ -339,6 +346,21 @@ ApplicationWindow {
                 Loader { Layout.fillWidth: true; Layout.preferredHeight: item ? item.implicitHeight : 0; sourceComponent: motionSelector }
                 Text { text: Theme.textFor("Minimal keeps transitions immediate. Balanced adds fluid movement. Cinematic adds luminous accents.", "Minimal afișează tranzițiile imediat. Balanced adaugă mișcare fluidă. Cinematic adaugă accente luminoase."); color: Theme.muted; font.pixelSize: Theme.body; wrapMode: Text.WordWrap; Layout.fillWidth: true }
                 Switch { objectName: "reduced-motion"; text: Theme.textFor("Reduce motion", "Reducerea mișcării"); checked: Preferences.reducedMotion; onToggled: Preferences.reducedMotion = checked; font.pixelSize: Theme.body }
+            }
+            NovaCard {
+                Layout.fillWidth: true
+                Text { text: Theme.textFor("The sound of your orbit", "Sunetul orbitei tale"); color: Theme.text; font.pixelSize: 18; font.weight: Font.DemiBold }
+                Text { text: Theme.textFor("Original short cues for sign-in, messages, devices and alerts. Preview a sound or choose your sound theme in KDE Settings.", "Sunete originale scurte pentru autentificare, mesaje, dispozitive și alerte. Ascultă un sunet sau alege tema sonoră din Setările KDE."); color: Theme.muted; font.pixelSize: Theme.body; Layout.fillWidth: true; wrapMode: Text.WordWrap }
+                Flow {
+                    Layout.fillWidth: true
+                    spacing: 8
+                    Repeater {
+                        model: [{id: "desktop-login", en: "Sign-in", ro: "Autentificare"}, {id: "message-new-instant", en: "Message", ro: "Mesaj"}, {id: "device-added", en: "Device", ro: "Dispozitiv"}, {id: "complete", en: "Complete", ro: "Finalizare"}]
+                        delegate: NovaButton { required property var modelData; text: Theme.textFor(modelData.en, modelData.ro); iconName: "media-playback-start"; onClicked: DesktopActions.previewSound(modelData.id) }
+                    }
+                }
+                NovaButton { text: Theme.textFor("Sound theme settings", "Setările temei sonore"); iconName: "audio-volume-high"; onClicked: DesktopActions.launch("soundtheme") }
+                NovaButton { text: Theme.textFor("Use NOVA Orbit sounds", "Folosește sunetele NOVA Orbit"); primary: true; onClicked: { Preferences.useNovaSounds(); DesktopActions.previewSound("desktop-login") } }
             }
         }
     }
@@ -440,42 +462,7 @@ ApplicationWindow {
 
     Component {
         id: updatesPage
-        ColumnLayout {
-            spacing: 20
-            Text { text: Theme.textFor("NOVA Update Engine", "NOVA Update Engine"); color: Theme.text; font.pixelSize: Theme.heading; font.weight: Font.DemiBold }
-            NovaCard {
-                Layout.fillWidth: true
-                Text { text: Theme.textFor("Image source", "Sursa imaginii"); color: Theme.text; font.pixelSize: 18 * Theme.fontScale; font.weight: Font.DemiBold }
-                Text { text: Updates.source || Theme.textFor("Not detected", "Nedetectată"); color: Theme.accent; font.pixelSize: Theme.body; Layout.fillWidth: true; wrapMode: Text.WrapAnywhere }
-                Text { text: Updates.sourceReady ? Theme.textFor("Remote source configured", "Sursă online configurată") : Theme.textFor("Online update source unavailable in this preview", "Sursa online de actualizări lipsește din această versiune preview"); color: Updates.sourceReady ? "#80d9b8" : "#f2c078"; font.pixelSize: Theme.small; Layout.fillWidth: true; wrapMode: Text.WordWrap }
-                Text { text: Updates.message; color: Theme.muted; font.pixelSize: Theme.small; Layout.fillWidth: true; wrapMode: Text.WordWrap }
-                NovaButton { text: Theme.textFor("Refresh status", "Verifică starea"); iconName: "view-refresh"; enabled: !Updates.busy; onClicked: Updates.refresh() }
-            }
-            NovaCard {
-                Layout.fillWidth: true
-                Text { text: Theme.textFor("Update steps", "Pașii actualizării"); color: Theme.text; font.pixelSize: 18 * Theme.fontScale; font.weight: Font.DemiBold }
-                Text { text: Theme.textFor("Check, download, then stage the image. Installation takes effect after a restart.", "Verifică, descarcă, apoi pregătește imaginea. Instalarea se activează după repornire."); color: Theme.muted; font.pixelSize: Theme.body; Layout.fillWidth: true; wrapMode: Text.WordWrap }
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: 8
-                    NovaButton { Layout.fillWidth: true; text: Theme.textFor("Check", "Verifică"); enabled: Updates.sourceReady && !Updates.busy; onClicked: Updates.check() }
-                    NovaButton { Layout.fillWidth: true; text: Theme.textFor("Download", "Descarcă"); enabled: Updates.sourceReady && !Updates.busy; onClicked: Updates.download() }
-                    NovaButton { Layout.fillWidth: true; text: Theme.textFor("Stage", "Pregătește"); enabled: Updates.sourceReady && !Updates.busy; onClicked: Updates.stage() }
-                }
-                Text { text: Updates.staged ? Theme.textFor("A new deployment is staged for restart.", "O versiune nouă este pregătită pentru repornire.") : Theme.textFor("No staged deployment detected.", "Nu este detectată o versiune pregătită."); color: Theme.muted; font.pixelSize: Theme.small }
-            }
-            NovaCard {
-                Layout.fillWidth: true
-                Text { text: Theme.textFor("Recovery", "Recuperare"); color: Theme.text; font.pixelSize: 18 * Theme.fontScale; font.weight: Font.DemiBold }
-                Text { text: Theme.textFor("Rollback selects the previous system image. Save your work before restarting.", "Rollback selectează imaginea anterioară. Salvează-ți lucrul înainte de repornire."); color: Theme.muted; font.pixelSize: Theme.small; Layout.fillWidth: true; wrapMode: Text.WordWrap }
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: 8
-                    NovaButton { Layout.fillWidth: true; text: Theme.textFor("Rollback", "Revino la versiunea anterioară"); enabled: Updates.rollbackAvailable && !Updates.busy; onClicked: Updates.rollback() }
-                    NovaButton { Layout.fillWidth: true; text: Theme.textFor("Restart", "Repornește"); enabled: !Updates.liveSystem && !Updates.busy && (Updates.staged || Updates.rollbackAvailable); onClicked: restartDialog.open() }
-                }
-            }
-        }
+        UpdatesPage { onRestartRequested: restartDialog.open() }
     }
 
     Component {
@@ -504,6 +491,14 @@ ApplicationWindow {
         }
     }
 
+    Component {
+        id: thisPcPage
+        ThisPc {}
+    }
+    Component {
+        id: taskManagerPage
+        TaskManager {}
+    }
     Component {
         id: welcomePage
         ColumnLayout {

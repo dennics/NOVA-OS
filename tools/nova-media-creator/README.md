@@ -1,4 +1,4 @@
-# NOVA Media Creation Tool 0.2 Preview
+# NOVA Media Creation Tool 0.3 Preview
 
 The Windows frontend checks the NOVA ISO against its pinned byte length and
 SHA-256, lists only identified USB disks that pass the system and state checks,

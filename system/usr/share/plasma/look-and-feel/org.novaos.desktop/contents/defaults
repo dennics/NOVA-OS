@@ -7,6 +7,9 @@ SingleClick=false
 [kdeglobals][Icons]
 Theme=breeze-dark
 
+[kdeglobals][Sounds]
+Theme=Nova
+
 [plasmarc][Theme]
 name=default
 

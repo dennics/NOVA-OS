@@ -1,0 +1,9 @@
+[Sound Theme]
+Name=NOVA Orbit
+Comment=Original short cosmic notification tones for NOVA OS
+Inherits=ocean,freedesktop
+Directories=stereo
+Example=theme-demo
+
+[stereo]
+OutputProfile=stereo

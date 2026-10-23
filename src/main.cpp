@@ -5,6 +5,8 @@
 #include "UpdateManager.hpp"
 #include "ProfileManager.hpp"
 #include "DriverCenter.hpp"
+#include "Workspace.hpp"
+#include "ProcessMonitor.hpp"
 #include <KIconTheme>
 #include <QCommandLineParser>
 #include <QGuiApplication>
@@ -28,7 +30,7 @@ int main(int argc, char **argv)
     app.setApplicationName(QStringLiteral("nova-control-center"));
     app.setApplicationDisplayName(QStringLiteral("NOVA Control Center"));
     app.setOrganizationName(QStringLiteral("NOVA"));
-    app.setApplicationVersion(QStringLiteral("0.2.1-preview"));
+    app.setApplicationVersion(QStringLiteral("0.3.0-preview"));
     app.setDesktopFileName(QStringLiteral("org.novaos.ControlCenter"));
     app.setWindowIcon(QIcon(QStringLiteral(":/assets/nova-mark.svg")));
     QIcon::setFallbackThemeName(QStringLiteral("breeze"));
@@ -38,7 +40,7 @@ int main(int argc, char **argv)
     parser.addOption({QStringLiteral("welcome"), QStringLiteral("Show first-run setup unless already completed")});
     parser.addOption({QStringLiteral("config"), QStringLiteral("Use an isolated preference file"), QStringLiteral("path")});
     parser.addOption({QStringLiteral("no-desktop-integration"), QStringLiteral("Do not change Plasma settings (for UI tests)")});
-    parser.addOption({QStringLiteral("page"), QStringLiteral("Initial page: overview, appearance, performance, system, updates or drivers"), QStringLiteral("name"), QStringLiteral("overview")});
+    parser.addOption({QStringLiteral("page"), QStringLiteral("Initial page: overview, appearance, performance, system, updates, drivers, thispc or tasks"), QStringLiteral("name"), QStringLiteral("overview")});
     parser.addOption({QStringLiteral("screenshot"), QStringLiteral("Capture the native window and exit"), QStringLiteral("path")});
     parser.addOption({QStringLiteral("render-wallpaper"), QStringLiteral("Render the bundled vector wallpaper to PNG and exit"), QStringLiteral("path")});
     parser.addOption({QStringLiteral("width"), QStringLiteral("Initial window width"), QStringLiteral("pixels"), QStringLiteral("1160")});
@@ -78,6 +80,8 @@ int main(int argc, char **argv)
     UpdateManager updates;
     ProfileManager profiles;
     DriverCenter drivers;
+    Workspace workspace;
+    ProcessMonitor processes;
     QQmlApplicationEngine engine;
     auto *context = engine.rootContext();
     context->setContextProperty(QStringLiteral("Preferences"), &preferences);
@@ -87,8 +91,10 @@ int main(int argc, char **argv)
     context->setContextProperty(QStringLiteral("Updates"), &updates);
     context->setContextProperty(QStringLiteral("Profiles"), &profiles);
     context->setContextProperty(QStringLiteral("Drivers"), &drivers);
+    context->setContextProperty(QStringLiteral("Workspace"), &workspace);
+    context->setContextProperty(QStringLiteral("Processes"), &processes);
     context->setContextProperty(QStringLiteral("welcomeMode"), parser.isSet(QStringLiteral("welcome")));
-    const QStringList pages{QStringLiteral("overview"), QStringLiteral("appearance"), QStringLiteral("performance"), QStringLiteral("system"), QStringLiteral("updates"), QStringLiteral("drivers")};
+    const QStringList pages{QStringLiteral("overview"), QStringLiteral("appearance"), QStringLiteral("performance"), QStringLiteral("system"), QStringLiteral("updates"), QStringLiteral("drivers"), QStringLiteral("thispc"), QStringLiteral("tasks")};
     context->setContextProperty(QStringLiteral("initialPage"), qMax(0, pages.indexOf(parser.value(QStringLiteral("page")))));
     int initialWidth = qBound(800, parser.value(QStringLiteral("width")).toInt(), 3840);
     int initialHeight = qBound(600, parser.value(QStringLiteral("height")).toInt(), 2160);

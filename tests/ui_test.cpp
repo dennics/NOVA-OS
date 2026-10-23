@@ -5,8 +5,12 @@
 #include "UpdateManager.hpp"
 #include "ProfileManager.hpp"
 #include "DriverCenter.hpp"
+#include "Workspace.hpp"
+#include "ProcessMonitor.hpp"
 #include <KIconTheme>
 #include <QGuiApplication>
+#include <QFile>
+#include <QJSEngine>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQmlError>
@@ -29,6 +33,42 @@ class UiTest final : public QObject {
         return false;
     }
 private slots:
+    void onlyBrandedPanelsAreMigrated()
+    {
+        QFile script(QFINDTESTDATA("../system/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/nova-030.js"));
+        QVERIFY(script.open(QIODevice::ReadOnly));
+        const auto source = QString::fromUtf8(script.readAll());
+        const auto setup = QString::fromLatin1(R"(
+            var branded = true;
+            var removed = false;
+            var created = [];
+            var old = {index: 2, globalShortcut: 'Alt+F1',
+                readConfig: function() {return branded ? 'nova-control-center' : 'user-custom-icon';},
+                remove: function() {removed = true;}};
+            var panel = {alignment: 'left', lengthMode: 'fill', floating: false, height: 52,
+                widgets: function() {return [old];},
+                addWidget: function(name) {var widget = {type: name}; created.push(widget); return widget;}};
+            var knownWidgetTypes = ['org.novaos.launcher'];
+            function panels() {return [panel];}
+        )");
+        QJSEngine engine;
+        QVERIFY(!engine.evaluate(setup).isError());
+        const auto result = engine.evaluate(source);
+        QVERIFY2(!result.isError(), qPrintable(result.toString()));
+        QVERIFY(engine.globalObject().property("removed").toBool());
+        const auto replacement = engine.globalObject().property("created").property(0);
+        QCOMPARE(replacement.property("index").toInt(), 2);
+        QCOMPARE(replacement.property("globalShortcut").toString(), QStringLiteral("Alt+F1"));
+        QCOMPARE(engine.globalObject().property("old").property("globalShortcut").toString(), QString{});
+        QCOMPARE(engine.globalObject().property("panel").property("alignment").toString(), QStringLiteral("center"));
+        QJSEngine untouched;
+        untouched.evaluate(setup);
+        untouched.evaluate(QStringLiteral("branded = false"));
+        QVERIFY(!untouched.evaluate(source).isError());
+        QVERIFY(!untouched.globalObject().property("removed").toBool());
+        QCOMPARE(untouched.globalObject().property("created").property("length").toInt(), 0);
+        QCOMPARE(untouched.globalObject().property("panel").property("alignment").toString(), QStringLiteral("left"));
+    }
     void keyboardNavigationAndPageLifecycle()
     {
         QTemporaryDir directory;
@@ -40,6 +80,8 @@ private slots:
         UpdateManager updates;
         ProfileManager profiles;
         DriverCenter drivers;
+        Workspace workspace;
+        ProcessMonitor processes;
         QQmlApplicationEngine engine;
         QStringList warnings;
         connect(&engine, &QQmlEngine::warnings, this, [&warnings](const QList<QQmlError> &errors) {
@@ -53,6 +95,8 @@ private slots:
         context->setContextProperty(QStringLiteral("Updates"), &updates);
         context->setContextProperty(QStringLiteral("Profiles"), &profiles);
         context->setContextProperty(QStringLiteral("Drivers"), &drivers);
+        context->setContextProperty(QStringLiteral("Workspace"), &workspace);
+        context->setContextProperty(QStringLiteral("Processes"), &processes);
         context->setContextProperty(QStringLiteral("welcomeMode"), false);
         context->setContextProperty(QStringLiteral("initialPage"), QVariant(0));
         context->setContextProperty(QStringLiteral("initialWidth"), 1280);
@@ -93,6 +137,18 @@ private slots:
         QTest::qWait(100);
         window->setProperty("page", 5);
         QTest::qWait(100);
+        window->setProperty("page", 6);
+        QTest::qWait(100);
+        QVERIFY(!processes.active());
+        QVERIFY(!workspace.folders().isEmpty());
+        window->setProperty("page", 7);
+        QTest::qWait(2200);
+        QVERIFY(processes.active());
+        QVERIFY(processes.processCount() > 0);
+        QVERIFY(processes.sampleCount() >= 2);
+        window->setProperty("page", 0);
+        QTest::qWait(100);
+        QVERIFY(!processes.active());
         QVERIFY2(warnings.isEmpty(), qPrintable(warnings.join('\n')));
         window->close();
         QVERIFY(!metrics.active());

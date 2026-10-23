@@ -35,6 +35,7 @@ public:
     void setReducedMotion(bool reduced);
     void setLanguage(const QString &language);
     Q_INVOKABLE void completeWelcome();
+    Q_INVOKABLE void useNovaSounds();
     void initializeSession(bool minimalEffects = false);
 signals:
     void changed();

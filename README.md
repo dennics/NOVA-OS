@@ -1,5 +1,32 @@
 # NOVA OS — Your PC. Your Power.
 
+**0.3.1 Preview is published:** the Steam/Opera GX first-install repair is
+available from **NOVA Settings → Updates → Check for updates → Download & install**.
+Restart to enter the new system image, then open Steam and confirm its application
+installation in Discover. No NOVA reinstall is needed. See the
+[update evidence and limits](docs/UPDATE-0.3.1.md).
+
+NOVA 0.3 adds an in-system update channel, NOVA Start, This PC, Task Manager,
+orbital boot animation and an original sound theme.
+See the [0.3 implementation and validation limits](docs/NOVA-0.3.md).
+Steam first-install error in the delivered Preview: see the
+[repair instructions and source fix](docs/STORE-TROUBLESHOOTING.md).
+The local 0.3 ISO has completed offline plain ext4 installation and a boot/login
+without the ISO in a disposable UEFI VM. The public Preview channel now points
+to 0.3.1; physical hardware and broader release acceptance remain open.
+
+The native 0.3 applications and local runtime image have been built. Seven
+CTest suites pass, and real keyboard search/launch was exercised in the NOVA
+Start applet. [Observed results and remaining checks](docs/VALIDATION-0.3.md).
+
+![NOVA Start running in an isolated Plasma applet window](docs/screenshots/start-0.3.png)
+
+![NOVA Task Manager reading real development VM processes](docs/screenshots/tasks-0.3.png)
+
+![NOVA This PC showing development VM folders and storage](docs/screenshots/thispc-0.3.png)
+
+These are native development captures, not proof of an installed 0.3 system.
+
 NOVA OS is an experimental desktop operating system based on Fedora Kinoite 44,
 KDE Plasma 6 and bootc images. It combines a cosmic desktop theme with a native
 C++ / Qt 6 / QML / Kirigami Control Center. No online NOVA account is required.
@@ -7,16 +34,17 @@ C++ / Qt 6 / QML / Kirigami Control Center. No online NOVA account is required.
 **0.2 Preview has known installation failures. It is a development snapshot,
 not a stable release or a recommended installation on a personal computer.**
 Read the [installer issues](docs/INSTALLER-ISSUES.md) before image experiments.
-The 0.2.1 branch includes a targeted staging correction, but no successful
-end-to-end 0.2.1 installation is claimed here. This source commit distributes
-no ISO, VM image or executable.
+The staging correction has now passed one whole-disk offline case in the local
+0.3 ISO; this does not close the original HP report or validate other layouts.
+Git excludes generated ISO, VM and executable files. Local kit provenance and
+test limits are described in [VALIDATION-0.3.md](docs/VALIDATION-0.3.md).
 
 These are the [original NOVA sources](docs/SOURCE-PROVENANCE.md), including the
-defective installer wrapper. Original NOVA code, documentation and graphics are
+installer staging integration. Original NOVA code, documentation and graphics are
 available under the MIT license. Third-party components retain their own terms;
 see [LICENSE](LICENSE), [NOTICE.md](NOTICE.md) and [licensing review](docs/LICENSING.md).
 
-## 0.2.1 Preview update
+## Historical 0.2.1 Preview update
 
 The 0.2.1 Preview branch improves Wine launch diagnostics, configures signed
 Flathub metadata for Discover, and adds NOVA launchers for Steam and Opera GX.
@@ -40,22 +68,22 @@ and its validation limits.
 The installer wrapper now stages image import in a separate, disk-backed
 temporary filesystem and checks available space before deployment. This is a
 targeted correction for the reported root-directory and temporary-storage
-failures; a successful offline installation from the rebuilt ISO remains a
-required acceptance test and is not claimed by this source change.
+failures. The subsequent local 0.3 ISO has completed one offline VM installation;
+the full matrix in ACCEPTANCE.md still applies.
 
-## What exists in 0.2
+## Implemented components
 
 | Component | Implemented behavior | Preview limits |
 | --- | --- | --- |
 | Control Center | Native UI, system information, CPU/RAM sampling, KConfig preferences, first-login welcome, Romanian/English UI | Desktop/hardware behavior needs testing beyond unit tests |
 | NOVA Dark | Plasma look-and-feel, colors, bottom panel, original SVG wallpaper/mark and motion preferences | Plasma provides desktop infrastructure; GPU effects vary |
 | Smart Compatibility | Local PE inspection, architecture checks, limited native-app hints, explicit Wine launch with process results and per-launch logs, shared/per-app prefixes, Dolphin integration | Hints use untrusted metadata; Wine is not a sandbox and execution is not guaranteed |
-| Update Center | bootc status and fixed helper operations through polkit; the 0.2.1 image targets the NOVA GHCR registry | Existing 0.2.0 systems still need a one-time source switch; update and rollback remain unvalidated on the HP laptop |
+| Update Center | bootc status and fixed operations through polkit; published moving NOVA Preview channel | 0.3.0 → 0.3.1 deployment, cold boot and rollback checked in a VM; HP validation and warm-reboot limitations remain |
 | Performance Profiles | Eco/Balanced/Gaming request power-saver/balanced/performance over D-Bus | Requires service/hardware support; GameMode is used by explicitly launched games; no FPS claims |
 | Driver Center | PCI GPU/vendor and active Linux driver detection with guidance | No proprietary NVIDIA driver installer |
-| Installer | Anaconda Live/WebUI configuration, offline payload integration, explicit disk selection; 0.2.1 adds isolated, space-checked image staging | The corrected path still needs a full offline installation test from the rebuilt ISO |
+| Installer | Anaconda Live/WebUI, offline payload, explicit disk selection and isolated space-checked staging; local 0.3 plain ext4 whole-disk installation passed in an offline VM | HP hardware, manual partitioning, encryption and interrupted/retried installation are not validated for this ISO |
 | Applications/archives | Opera GX and Steam launchers open Discover pages; Ark, unar and 7zip handle ZIP/RAR/7z | Browser/game binaries are installed separately; Wine cannot run every Windows app; RAR creation is absent |
-| Windows USB tool | Original C# frontend and build script | Pins the historical defective ISO; binaries and Fedora writer payload excluded; not a recommended kit |
+| Windows USB tool | Native C# frontend pinned to the local 0.3 ISO, protected Fedora helper cache, explicit erase confirmation, safe self-test and ZIP64 kit packager | Physical USB writing untested; unsigned executable; generated binaries/payloads excluded from Git |
 
 ## Real application screenshots
 
@@ -107,12 +135,13 @@ cmake --build build/native -j2
 ctest --test-dir build/native --output-on-failure
 ```
 
-The authentic image pipeline is `sudo bash scripts/build.sh iso`. It currently
-requires exact local NOVA 0.1 bootstrap images from `sources.lock.json` and
-separately acquired Opera inputs. Those inputs are not in GitHub. A contributor
-can build the native applications, but **a clean checkout cannot yet reproduce
-the historical ISO**. The build guide lists missing inputs and required follow-up;
-it does not replace them with invented files or promise identical bytes.
+The image pipeline is `sudo bash scripts/build.sh iso`, using the Fedora base
+and Image Builder digests in `sources.lock.json`. Current runtime configuration
+offers Opera GX through Discover rather than embedding proprietary binaries.
+The local 0.3 validation reused the verified 0.2.1 runtime as its explicit build
+base; it is not a clean-host reproducibility result. Fedora package repositories
+are not snapshot-pinned. See [BUILD.md](docs/BUILD.md) for dependencies and the
+recorded provenance; bit-identical ISO output is not promised.
 
 Run publication checks with Python 3.10+ and Git:
 
@@ -122,7 +151,8 @@ python3 scripts/audit-publication.py
 
 Full installation must use an unmodified rebuilt ISO with no virtual NIC and a
 disposable target disk. [VM.md](docs/VM.md) and [ACCEPTANCE.md](docs/ACCEPTANCE.md)
-define the acceptance gate. Current 0.2 failures leave that gate open.
+define the full acceptance gate. The local 0.3 plain installation case has passed;
+hardware, encryption, manual layouts and online update/rollback remain open.
 
 ## Hardware and development resources
 

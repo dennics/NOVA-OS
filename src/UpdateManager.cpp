@@ -24,31 +24,17 @@ UpdateManager::UpdateManager(QObject *parent) : QObject(parent)
 
 void UpdateManager::parseStatus(const QByteArray &output)
 {
-    m_source.clear();
-    m_sourceReady = false;
-    m_rollback = false;
-    m_staged = false;
-    m_live = false;
-    QJsonParseError error;
-    const QJsonDocument document = QJsonDocument::fromJson(output, &error);
-    if (error.error != QJsonParseError::NoError || !document.isObject()) {
+    m_state = decodeUpdateState(output);
+    m_source = m_state.source;
+    m_sourceReady = m_state.sourceReady;
+    m_rollback = m_state.rollback;
+    m_staged = m_state.staged;
+    m_live = !m_state.installed || m_state.readOnly;
+    if (!m_state.valid) {
         m_message = QStringLiteral("bootc returned an unreadable status.");
         return;
     }
-    const QJsonObject root = document.object();
-    const QJsonObject specImage = root.value(QStringLiteral("spec")).toObject()
-                                       .value(QStringLiteral("image")).toObject();
-    const QJsonObject status = root.value(QStringLiteral("status")).toObject();
-    m_source = specImage.value(QStringLiteral("image")).toString();
-    const bool booted = status.value(QStringLiteral("booted")).isObject();
-    m_live = status.value(QStringLiteral("readOnly")).toBool();
-    m_rollback = status.value(QStringLiteral("rollback")).isObject();
-    m_staged = status.value(QStringLiteral("staged")).isObject();
-    const QString transport = specImage.value(QStringLiteral("transport")).toString();
-    m_sourceReady = booted && !m_live && transport == QStringLiteral("registry")
-        && !m_source.isEmpty() && !m_source.startsWith(QStringLiteral("localhost/"))
-        && !m_source.startsWith(QStringLiteral("nova.invalid/"));
-    if (!booted) m_message = QStringLiteral("NOVA is not running from an installed bootc image.");
+    if (!m_state.installed) m_message = QStringLiteral("NOVA is not running from an installed bootc image.");
     else if (m_live) m_message = QStringLiteral("Updates are available after installation, not in Live mode.");
     else if (!m_sourceReady) m_message = QStringLiteral("No NOVA update registry is configured for this preview.");
     else if (m_message.isEmpty()) m_message = QStringLiteral("Image source ready. Check for an update when connected.");
@@ -88,7 +74,9 @@ void UpdateManager::refresh()
 
 void UpdateManager::runOperation(const QString &verb)
 {
-    if (busy() || (verb != QStringLiteral("rollback") && !m_sourceReady)
+    if (busy() || m_live
+        || (verb == QStringLiteral("enable-preview") && !m_state.channelMigration)
+        || (verb != QStringLiteral("rollback") && verb != QStringLiteral("enable-preview") && !m_sourceReady)
         || (verb == QStringLiteral("rollback") && !m_rollback)) return;
     const QString pkexec = QStandardPaths::findExecutable(QStringLiteral("pkexec"));
     if (pkexec.isEmpty() || !QFileInfo::exists(QString::fromLatin1(helperPath))) {
@@ -98,14 +86,24 @@ void UpdateManager::runOperation(const QString &verb)
     }
     auto *process = new QProcess(this);
     m_process = process;
+    m_operation = verb;
+    m_details.clear();
     m_message = QStringLiteral("Running %1…").arg(verb);
     emit changed();
+    process->setProcessChannelMode(QProcess::MergedChannels);
+    connect(process, &QProcess::readyReadStandardOutput, this, [this, process] {
+        m_details += QString::fromUtf8(process->readAllStandardOutput());
+        if (m_details.size() > 16000) m_details = m_details.right(16000);
+        emit changed();
+    });
     connect(process, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this,
             [this, process, verb](int code, QProcess::ExitStatus status) {
         if (m_process != process) return;
         m_process = nullptr;
-        const QString output = trimmedOutput(process->readAllStandardOutput(),
-                                              process->readAllStandardError());
+        m_details += QString::fromUtf8(process->readAllStandardOutput());
+        if (m_details.size() > 16000) m_details = m_details.right(16000);
+        const QString output = m_details.trimmed().right(650);
+        m_operation.clear();
         m_message = status == QProcess::NormalExit && code == 0
             ? (output.isEmpty() ? QStringLiteral("%1 completed.").arg(verb) : output)
             : (output.isEmpty() ? QStringLiteral("%1 failed or authorization was cancelled.").arg(verb) : output);
@@ -116,6 +114,7 @@ void UpdateManager::runOperation(const QString &verb)
     connect(process, &QProcess::errorOccurred, this, [this, process] {
         if (m_process != process) return;
         m_process = nullptr;
+        m_operation.clear();
         m_message = process->errorString();
         process->deleteLater();
         emit changed();
@@ -127,6 +126,8 @@ void UpdateManager::check() { runOperation(QStringLiteral("check")); }
 void UpdateManager::download() { runOperation(QStringLiteral("download")); }
 void UpdateManager::stage() { runOperation(QStringLiteral("stage")); }
 void UpdateManager::rollback() { runOperation(QStringLiteral("rollback")); }
+void UpdateManager::install() { runOperation(QStringLiteral("install")); }
+void UpdateManager::enablePreviewChannel() { runOperation(QStringLiteral("enable-preview")); }
 
 void UpdateManager::restart()
 {

@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.3.1 Preview — store repair, 2026-10-23
+
+- Repair Steam/Opera GX first-install launchers using official Flathub install
+  references instead of a case-folded AppStream URL and a preloaded catalog.
+  Published as an OS update on the anonymous `ghcr.io/dennics/nova-os:preview`
+  channel. The previously delivered ISO is unchanged.
+- Verified deployment from public GHCR onto installed NOVA 0.3, cold boot into
+  0.3.1 and rollback cold boot to 0.3.0, with the personal-file fixture and
+  personalization retained. Windows QEMU/WHPX warm-reset failures remain a
+  test-environment limitation; no HP, Steam startup or game validation claimed.
+
+## 0.3.0 Preview — local test kit
+
+- Moving NOVA Preview image channel, one-action system update UI, streamed logs,
+  version status, metadata-check timer and explicit restart/rollback prompts.
+- A fixed, authorized migration path from legacy NOVA Preview sources.
+- This PC with standard personal folders and actual mounted storage capacity.
+- Task Manager with visible-page CPU/RAM/process sampling, search, sorting and
+  confirmed own-user SIGTERM through pidfds.
+- Original NOVA Start Plasma applet, centered floating panel and conservative
+  migration of the old NOVA-branded launcher.
+- Original orbit boot frames on native Plymouth and 14 generated notification cues.
+- Native parser/lifecycle/process-safety tests and expanded QML page coverage.
+- Local 0.3 ISO and Windows USB kit: checksum-pinned image, complete offline
+  whole-disk plain ext4 installation in a UEFI/WHPX VM, detached-ISO boot/login,
+  persisted user-file fixture, enforcing SELinux and active firewall verified.
+- No published 0.3 update or physical HP/USB validation claimed; manual layouts,
+  encryption, failure recovery and installed update/rollback acceptance remain open.
+
 ## 0.2.1 Preview — compatibility and update repair
 
 - Wine launches report process-start failures, exit status and a per-launch log.

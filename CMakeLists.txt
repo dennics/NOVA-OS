@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(NovaOS VERSION 0.2.1 LANGUAGES CXX)
+project(NovaOS VERSION 0.3.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -13,6 +13,12 @@ if(BUILD_TESTING)
     add_executable(nova_metrics_test tests/metrics_test.cpp)
     target_link_libraries(nova_metrics_test PRIVATE nova_metrics)
     add_test(NAME metrics-parser COMMAND nova_metrics_test)
+    if(UNIX)
+        find_package(Python3 REQUIRED COMPONENTS Interpreter)
+        add_test(NAME preview-publication-guards COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/update_publish_test.py)
+        add_test(NAME original-sound-cues COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/sound_cues_test.py)
+        add_test(NAME store-launcher-regression COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/store_launcher_test.py)
+    endif()
 endif()
 
 if(NOVA_BUILD_DESKTOP)
@@ -27,6 +33,9 @@ if(NOVA_BUILD_DESKTOP)
         src/SystemInfo.cpp src/SystemInfo.hpp
         src/DesktopActions.cpp src/DesktopActions.hpp
         src/UpdateManager.cpp src/UpdateManager.hpp
+        src/UpdateState.cpp src/UpdateState.hpp
+        src/Workspace.cpp src/Workspace.hpp
+        src/ProcessMonitor.cpp src/ProcessMonitor.hpp
         src/ProfileManager.cpp src/ProfileManager.hpp
         src/DriverCenter.cpp src/DriverCenter.hpp)
     target_include_directories(nova_backend PUBLIC src)
@@ -36,11 +45,13 @@ if(NOVA_BUILD_DESKTOP)
     target_link_libraries(nova-control-center PRIVATE nova_backend Qt6::Gui Qt6::Quick Qt6::QuickControls2 Qt6::Svg KF6::IconThemes)
     set(NOVA_UI_FILES
         ui/qmldir ui/Theme.qml ui/Main.qml ui/NovaCard.qml ui/NovaButton.qml
-        ui/NavItem.qml ui/MetricBar.qml ui/NovaIcon.qml assets/nova-mark.svg assets/cosmic.svg)
+        ui/NavItem.qml ui/MetricBar.qml ui/NovaIcon.qml ui/ThisPc.qml ui/TaskManager.qml ui/UpdatesPage.qml
+        assets/nova-mark.svg assets/cosmic.svg)
     qt_add_resources(nova-control-center nova_ui PREFIX "/" FILES ${NOVA_UI_FILES})
     install(TARGETS nova-control-center RUNTIME DESTINATION bin)
     install(FILES system/usr/share/applications/org.novaos.ControlCenter.desktop DESTINATION share/applications)
     install(FILES assets/nova-mark.svg DESTINATION share/icons/hicolor/scalable/apps RENAME nova-control-center.svg)
+    install(FILES assets/nova-thispc.svg assets/nova-task-manager.svg assets/nova-update.svg DESTINATION share/icons/hicolor/scalable/apps)
 
     add_library(nova_compat STATIC
         src/compat/CompatInspector.cpp src/compat/CompatInspector.hpp)
@@ -61,6 +72,9 @@ if(NOVA_BUILD_DESKTOP)
         qt_add_executable(nova_backend_test tests/backend_test.cpp)
         target_link_libraries(nova_backend_test PRIVATE nova_backend Qt6::Test)
         add_test(NAME preference-persistence-and-monitor-lifecycle COMMAND nova_backend_test)
+        qt_add_executable(nova_desktop_test tests/desktop_test.cpp)
+        target_link_libraries(nova_desktop_test PRIVATE nova_backend Qt6::Test)
+        add_test(NAME update-state-and-process-safety COMMAND nova_desktop_test)
         qt_add_executable(nova_ui_test tests/ui_test.cpp)
         target_link_libraries(nova_ui_test PRIVATE nova_backend Qt6::Test Qt6::Quick Qt6::QuickControls2 Qt6::Svg KF6::IconThemes)
         qt_add_resources(nova_ui_test nova_test_ui PREFIX "/" FILES ${NOVA_UI_FILES})

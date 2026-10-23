@@ -103,6 +103,14 @@ void Preferences::applyLanguage()
     KConfigGroup(locale, QStringLiteral("Translations")).writeEntry("LANGUAGE", m_language);
     locale->sync();
 }
+void Preferences::useNovaSounds()
+{
+    if (!m_updateDesktop) return;
+    auto globals = KSharedConfig::openConfig(QStringLiteral("kdeglobals"));
+    KConfigGroup(globals, QStringLiteral("Sounds")).writeEntry("Theme", "Nova");
+    globals->sync();
+    emit changed();
+}
 void Preferences::applyMotion()
 {
     auto globals = KSharedConfig::openConfig(QStringLiteral("kdeglobals"));

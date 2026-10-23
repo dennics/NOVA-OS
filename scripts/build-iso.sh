@@ -2,8 +2,11 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 [[ $EUID == 0 ]] || { echo 'Run inside the dedicated Fedora builder as root.' >&2; exit 1; }
-version=${NOVA_VERSION:-0.2.1-preview}
+version=${NOVA_VERSION:-0.3.0-preview}
 [[ "$version" =~ ^[a-zA-Z0-9][a-zA-Z0-9._-]*$ ]] || exit 1
+artifact_version=${version%.0-preview}
+[[ $artifact_version != "$version" ]] || artifact_version=${version%-preview}
+iso_name="NOVA-OS-${artifact_version}-Preview-x86_64"
 runtime="localhost/nova:${version}"
 live="localhost/nova-live:${version}"
 builder=$(jq -r '.builder.ref + "@" + .builder.digest' sources.lock.json)
@@ -34,14 +37,15 @@ podman run --pull=never --rm --privileged \
     -v /var/cache/nova-osbuild:/store:Z \
     -v "$PWD/scripts/osbuild:/usr/local/bin/osbuild:ro,Z" \
     -v "$iso_output:/output:Z" "$builder" build --output-dir /output --cache /store --progress verbose \
-    --output-name NOVA-OS-0.2-Preview-x86_64 \
+    --output-name "$iso_name" \
     --bootc-ref "$live" --bootc-build-ref "$tools_ref" --bootc-installer-payload-ref "$runtime" \
     --bootc-default-fs ext4 --with-manifest --with-sbom bootc-generic-iso
 mapfile -t isos < <(find "$iso_output" -type f -name '*.iso')
 [[ ${#isos[@]} == 1 ]] || { echo 'Image Builder must produce exactly one ISO.' >&2; exit 1; }
-mv "${isos[0]}" artifacts/NOVA-OS-0.2-Preview-x86_64.iso
+[[ ! -e artifacts/"$iso_name.iso" ]] || { echo 'ISO already exists; preserve it before rebuilding.' >&2; exit 1; }
+mv "${isos[0]}" "artifacts/$iso_name.iso"
 cp "$iso_output/nova-live.osbuild-manifest.json" artifacts/nova-live.osbuild-manifest.json
-(cd artifacts && sha256sum NOVA-OS-0.2-Preview-x86_64.iso >NOVA-OS-0.2-Preview-x86_64.iso.sha256)
+(cd artifacts && sha256sum "$iso_name.iso" >"$iso_name.iso.sha256")
 case "$iso_output" in
     "$PWD"/artifacts/image-builder.*) rm -rf -- "$iso_output" ;;
     *) echo "Refusing to remove unexpected Image Builder path: $iso_output" >&2; exit 1 ;;

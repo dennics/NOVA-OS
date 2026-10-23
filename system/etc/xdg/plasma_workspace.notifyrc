@@ -1,0 +1,15 @@
+[Event/startkde]
+Action=Sound
+Sound=desktop-login
+
+[Event/exitkde]
+Action=Sound
+Sound=desktop-logout
+
+[Event/deviceAdded]
+Action=Popup|Sound
+Sound=device-added
+
+[Event/deviceRemoved]
+Action=Popup|Sound
+Sound=device-removed

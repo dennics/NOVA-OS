@@ -30,7 +30,7 @@ int main(int argc, char **argv)
     app.setApplicationName(QStringLiteral("nova-control-center"));
     app.setApplicationDisplayName(QStringLiteral("NOVA Control Center"));
     app.setOrganizationName(QStringLiteral("NOVA"));
-    app.setApplicationVersion(QStringLiteral("0.3.0-preview"));
+    app.setApplicationVersion(QStringLiteral("0.3.2-preview"));
     app.setDesktopFileName(QStringLiteral("org.novaos.ControlCenter"));
     app.setWindowIcon(QIcon(QStringLiteral(":/assets/nova-mark.svg")));
     QIcon::setFallbackThemeName(QStringLiteral("breeze"));

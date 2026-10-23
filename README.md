@@ -1,10 +1,10 @@
 # NOVA OS — Your PC. Your Power.
 
-**0.3.1 Preview is published** with the Steam/Opera GX first-install repair.
-Final installed-user testing found an additional Settings blocker: this bootc
-version requires root even to read status, while the old GUI reads it directly.
-The `0.3.2-preview` repair is being prepared. Existing affected installations
-need one update through their already installed, authorized update backend:
+**0.3.2 Preview is published** with the Steam/Opera GX first-install repair and
+the Settings status-permission fix. Installed-user testing confirmed that the
+new GUI reads update state without running the desktop application as root.
+Existing 0.3.0/0.3.1 GUIs need one update through their already installed,
+authorized backend, because their status failure disables the update controls:
 
 ```sh
 pkexec /usr/libexec/nova-update-helper install
@@ -12,7 +12,9 @@ pkexec /usr/libexec/nova-update-helper install
 
 Restart after it finishes. This uses the published Preview channel and preserves
 the installed system's normal update/recovery mechanism; no ISO is required.
-See [update evidence and limits](docs/UPDATE-0.3.1.md).
+After restart, use NOVA Settings → Updates for future published Preview images.
+Open Steam and confirm its application installation in Discover. See the
+[update evidence and limits](docs/UPDATE-0.3.2.md).
 
 NOVA 0.3 adds an in-system update channel, NOVA Start, This PC, Task Manager,
 orbital boot animation and an original sound theme.
@@ -21,7 +23,7 @@ Steam first-install error in the delivered Preview: see the
 [repair instructions and source fix](docs/STORE-TROUBLESHOOTING.md).
 The local 0.3 ISO has completed offline plain ext4 installation and a boot/login
 without the ISO in a disposable UEFI VM. The public Preview channel now points
-to 0.3.1; physical hardware and broader release acceptance remain open.
+to 0.3.2; physical hardware and broader release acceptance remain open.
 
 The native 0.3 applications and local runtime image have been built. Seven
 CTest suites pass, and real keyboard search/launch was exercised in the NOVA

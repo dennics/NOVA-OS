@@ -8,8 +8,9 @@ The 0.3.2 Settings repair is in preparation; affected installations need the
 one-time `pkexec /usr/libexec/nova-update-helper install` bootstrap before the
 fixed GUI can be used. Earlier GUI-update instructions below depend on that fix.
 
-Status: published on 2026-10-23. The numbered reference and the moving
-`ghcr.io/dennics/nova-os:preview` channel resolve anonymously to the same digest.
+Historical publication: 0.3.1 was published on 2026-10-23 and its numbered
+reference remains readable. The moving Preview channel has subsequently been
+promoted to [0.3.2](UPDATE-0.3.2.md), which also repairs the Settings blocker.
 
 On an installed NOVA 0.3 system: NOVA Settings → Updates → Check for updates →
 Download & install. Restart when ready, then open Steam and confirm its app

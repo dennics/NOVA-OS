@@ -1,5 +1,6 @@
 #include "ProcessMonitor.hpp"
 #include "UpdateState.hpp"
+#include "UpdateManager.hpp"
 #include "Workspace.hpp"
 #include <QFile>
 #include <QJsonDocument>
@@ -11,6 +12,28 @@
 class DesktopTest final : public QObject {
     Q_OBJECT
 private slots:
+    void desktopStatusUsesOnlyTheReadOnlyAuthorizationHelper()
+    {
+        QTemporaryDir fixture;
+        QVERIFY(fixture.isValid());
+        const auto path = fixture.filePath(QStringLiteral("pkexec"));
+        QFile mock(path);
+        QVERIFY(mock.open(QIODevice::WriteOnly));
+        mock.write("#!/usr/bin/bash\n"
+                   "[[ $# == 1 && $1 == /usr/libexec/nova-update-status ]] || exit 64\n"
+                   "printf '%s\\n' '{\"spec\":{\"image\":{\"transport\":\"registry\",\"image\":\"ghcr.io/dennics/nova-os:preview\"}},\"status\":{\"readOnly\":false,\"booted\":{\"image\":{\"version\":\"0.3.0-preview\",\"imageDigest\":\"sha256:aaa\"},\"cachedUpdate\":{\"version\":\"0.3.2-preview\",\"imageDigest\":\"sha256:bbb\"}}}}'\n");
+        mock.close();
+        QVERIFY(mock.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner));
+        const auto originalPath = qgetenv("PATH");
+        qputenv("PATH", fixture.path().toUtf8() + ':' + originalPath);
+        UpdateManager manager;
+        QTRY_VERIFY_WITH_TIMEOUT(!manager.busy(), 5000);
+        qputenv("PATH", originalPath);
+        QVERIFY(manager.sourceReady());
+        QVERIFY(!manager.liveSystem());
+        QVERIFY(manager.updateAvailable());
+        QCOMPARE(manager.availableVersion(), QStringLiteral("0.3.2-preview"));
+    }
     void updateStatusAndMigration()
     {
         const QByteArray json = R"({"spec":{"image":{"image":"ghcr.io/dennics/nova-os:preview","transport":"registry"}},"status":{"readOnly":false,"booted":{"image":{"version":"0.3.0-preview","imageDigest":"sha256:aaa"},"cachedUpdate":{"version":"0.3.1-preview","imageDigest":"sha256:bbb"}},"staged":{"image":{"version":"0.3.1-preview"},"downloadOnly":true},"rollback":{"image":{"version":"0.2.1-preview"}}}})";

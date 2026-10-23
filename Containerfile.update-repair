@@ -1,0 +1,17 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+ARG NOVA_VERSION=0.3.2-preview
+COPY build/settings-install/usr/bin/nova-control-center /usr/bin/nova-control-center
+COPY system/usr/libexec/nova-update-status /usr/libexec/nova-update-status
+COPY system/usr/share/polkit-1/actions/org.novaos.update.policy /usr/share/polkit-1/actions/org.novaos.update.policy
+RUN chmod 0755 /usr/bin/nova-control-center /usr/libexec/nova-update-status && \
+    bash -n /usr/libexec/nova-update-status && \
+    jq --arg version "$NOVA_VERSION" '.version = $version' /usr/lib/nova/release.json > /usr/lib/nova/release.json.new && \
+    mv /usr/lib/nova/release.json.new /usr/lib/nova/release.json && \
+    sed -i "s/^PRETTY_NAME=.*/PRETTY_NAME=\"NOVA OS ${NOVA_VERSION}\"/" /usr/lib/os-release && \
+    printf 'NOVA OS release 44 (%s)\n' "$NOVA_VERSION" > /etc/system-release && \
+    bootc container lint
+LABEL org.opencontainers.image.source="https://github.com/dennics/NOVA-OS" \
+      org.opencontainers.image.title="NOVA OS" \
+      org.opencontainers.image.description="NOVA OS Preview — authorized update status and Steam store repair" \
+      org.opencontainers.image.version="${NOVA_VERSION}"

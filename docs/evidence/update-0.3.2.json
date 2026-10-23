@@ -1,0 +1,23 @@
+{
+  "version": "0.3.2-preview",
+  "date": "2026-10-23",
+  "image": "ghcr.io/dennics/nova-os:0.3.2-preview",
+  "channel": "ghcr.io/dennics/nova-os:preview",
+  "digest": "sha256:056d0b939e98e83242f086430f4e70738ff95c878be70317aadd289c9a0e0fd5",
+  "anonymousPullVerified": true,
+  "installedColdBootVerified": true,
+  "ordinaryUserSettingsVerified": true,
+  "desktopUid": 1000,
+  "activeLocalReadStatusWithoutAdminPrompt": true,
+  "readStatusArgumentsRejected": true,
+  "administrativeAuthenticationRetained": true,
+  "personalFileRetained": true,
+  "selinux": "Enforcing",
+  "firewall": "active",
+  "legacyBootstrapRequired": true,
+  "legacyBootstrapThroughPkexecVerified": true,
+  "legacyBootstrapExitCode": 0,
+  "warmRebootVerified": false,
+  "physicalHardwareVerified": false,
+  "steamOrGamesVerified": false
+}

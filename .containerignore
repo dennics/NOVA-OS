@@ -3,6 +3,8 @@ artifacts
 build/*
 !build/install
 !build/install/**
+!build/settings-install
+!build/settings-install/**
 __pycache__
 tools
 docs

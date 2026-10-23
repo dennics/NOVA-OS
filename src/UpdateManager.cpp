@@ -43,9 +43,9 @@ void UpdateManager::parseStatus(const QByteArray &output)
 void UpdateManager::refresh()
 {
     if (busy()) return;
-    const QString bootc = QStandardPaths::findExecutable(QStringLiteral("bootc"));
-    if (bootc.isEmpty()) {
-        m_message = QStringLiteral("bootc is unavailable.");
+    const QString pkexec = QStandardPaths::findExecutable(QStringLiteral("pkexec"));
+    if (pkexec.isEmpty()) {
+        m_message = QStringLiteral("NOVA update status authorization is unavailable.");
         emit changed();
         return;
     }
@@ -68,8 +68,7 @@ void UpdateManager::refresh()
         process->deleteLater();
         emit changed();
     });
-    process->start(bootc, {QStringLiteral("status"), QStringLiteral("--format=json"),
-                           QStringLiteral("--format-version=1")});
+    process->start(pkexec, {QStringLiteral("/usr/libexec/nova-update-status")});
 }
 
 void UpdateManager::runOperation(const QString &verb)

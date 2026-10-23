@@ -1,5 +1,12 @@
 # Real screenshot provenance
 
+`updates-0.3.2.png` was captured on 2026-10-23 from the native rebuilt Control
+Center running as UID 1000 in an active local console session of the installed
+NOVA 0.3.2 acceptance VM. Qt offscreen/software rendering produced the image;
+the backend read actual bootc state through the new restricted polkit status
+helper. This is not a root GUI or a design mockup. The numbered test source
+explains the Connect Preview card. See `docs/UPDATE-0.3.2.md` for limits.
+
 The 0.2 files below are unchanged captures from the original development project's
 `artifacts/screenshots/`. They show the running NOVA Qt application; they are not
 generated mockups or proof of installation. No private user desktop is visible.

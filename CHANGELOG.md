@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.2 Preview — Settings repair, 2026-10-23
+
+- Root-required bootc status is delegated through a separate, fixed, no-argument
+  read-only helper for active local sessions. Installation and rollback retain
+  administrator authentication. The desktop application stays unprivileged.
+- Existing 0.3.0/0.3.1 GUIs cannot bootstrap this repair themselves because their
+  status failure disables the update actions; one call to the installed authorized
+  update backend is required before future Settings updates can work.
+- Published on the public Preview channel. Cold boot and native Updates rendering
+  with UID 1000 validated the read-only policy and enabled controls in an installed
+  VM. Steam/game startup on the physical laptop remains unverified.
+
 ## 0.3.1 Preview — store repair, 2026-10-23
 
 - Repair Steam/Opera GX first-install launchers using official Flathub install

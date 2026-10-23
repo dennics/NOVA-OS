@@ -24,13 +24,15 @@ their explicit user/system installation, preserving arguments.
 
 ## Repair an existing installation without reinstalling NOVA
 
-The fix is published as NOVA OS `0.3.1-preview` on the public Preview channel.
-In NOVA Settings → Updates, check for updates, choose Download & install and
-restart when ready. Then open Steam and confirm installation in Discover.
+The fix first shipped as `0.3.1-preview`; the public Preview channel now provides
+`0.3.2-preview`, including the Settings permission repair. Old 0.3.0/0.3.1 GUIs
+need one `pkexec /usr/libexec/nova-update-helper install` bootstrap because
+their status failure disables update controls. After restart, use NOVA Settings
+→ Updates for later versions. Then open Steam and confirm installation in Discover.
 The application/runtime download needs internet access and is separate from
 the OS update. Older numbered or placeholder update sources need the Settings
 page's Connect NOVA Preview action; a current 0.3 ISO installation already
-tracks the moving channel. See [update validation](UPDATE-0.3.1.md).
+tracks the moving channel. See [update validation](UPDATE-0.3.2.md).
 
 For an application-only workaround without updating the system image:
 

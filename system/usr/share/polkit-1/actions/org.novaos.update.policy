@@ -2,6 +2,17 @@
 <!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN" "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
 <policyconfig>
   <vendor>NOVA OS</vendor>
+  <action id="org.novaos.update.status">
+    <description>Read NOVA OS update status</description>
+    <message>Read the installed NOVA image version and update state.</message>
+    <icon_name>system-software-update</icon_name>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/nova-update-status</annotate>
+  </action>
   <action id="org.novaos.update">
     <description>Manage NOVA OS image updates</description>
     <message>Authentication is required to manage NOVA OS image updates.</message>

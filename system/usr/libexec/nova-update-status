@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+set -euo pipefail
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+export LC_ALL=C.UTF-8
+# Only fixed, read-only machine status is exposed to an active local session.
+# Administrative operations remain in nova-update-helper with auth_admin.
+[[ $EUID -eq 0 && $# -eq 0 ]] || { echo 'Use NOVA authorization to read update status; arguments are not accepted.' >&2; exit 2; }
+exec /usr/bin/timeout --signal=TERM 15s /usr/bin/bootc status --format=json --format-version=1

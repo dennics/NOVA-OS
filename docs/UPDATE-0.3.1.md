@@ -1,5 +1,13 @@
 # NOVA OS 0.3.1 Preview — application store repair
 
+Correction from final installed-user testing: the original Settings code invokes
+`bootc status` without privilege, which fails on this installed bootc version.
+Consequently the old GUI may leave update controls disabled despite the valid
+public image channel. The root-run NOVA update helper successfully finds 0.3.1.
+The 0.3.2 Settings repair is in preparation; affected installations need the
+one-time `pkexec /usr/libexec/nova-update-helper install` bootstrap before the
+fixed GUI can be used. Earlier GUI-update instructions below depend on that fix.
+
 Status: published on 2026-10-23. The numbered reference and the moving
 `ghcr.io/dennics/nova-os:preview` channel resolve anonymously to the same digest.
 

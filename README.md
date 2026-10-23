@@ -1,10 +1,18 @@
 # NOVA OS — Your PC. Your Power.
 
-**0.3.1 Preview is published:** the Steam/Opera GX first-install repair is
-available from **NOVA Settings → Updates → Check for updates → Download & install**.
-Restart to enter the new system image, then open Steam and confirm its application
-installation in Discover. No NOVA reinstall is needed. See the
-[update evidence and limits](docs/UPDATE-0.3.1.md).
+**0.3.1 Preview is published** with the Steam/Opera GX first-install repair.
+Final installed-user testing found an additional Settings blocker: this bootc
+version requires root even to read status, while the old GUI reads it directly.
+The `0.3.2-preview` repair is being prepared. Existing affected installations
+need one update through their already installed, authorized update backend:
+
+```sh
+pkexec /usr/libexec/nova-update-helper install
+```
+
+Restart after it finishes. This uses the published Preview channel and preserves
+the installed system's normal update/recovery mechanism; no ISO is required.
+See [update evidence and limits](docs/UPDATE-0.3.1.md).
 
 NOVA 0.3 adds an in-system update channel, NOVA Start, This PC, Task Manager,
 orbital boot animation and an original sound theme.
